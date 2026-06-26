@@ -343,3 +343,52 @@ def ai_coach():
     return jsonify({
         "advice": advice
     }), 200
+
+
+# ==========================
+# Change Password
+# ==========================
+
+@auth.route("/change-password", methods=["POST"])
+@token_required
+def change_password():
+    data = request.json
+    current_password = data.get("currentPassword")
+    new_password = data.get("newPassword")
+
+    if not current_password or not new_password:
+        return jsonify({
+            "message": "Missing password fields"
+        }), 400
+
+    user = users.find_one({"email": request.user_email})
+    if not user:
+        return jsonify({
+            "message": "User not found"
+        }), 404
+
+    # Verify current password
+    if not bcrypt.checkpw(
+        current_password.encode("utf-8"),
+        user["password"]
+    ):
+        return jsonify({
+            "message": "Incorrect current password"
+        }), 400
+
+    # Hash new password
+    hashed_password = bcrypt.hashpw(
+        new_password.encode("utf-8"),
+        bcrypt.gensalt()
+    )
+
+    # Update database record
+    users.update_one(
+        {"email": request.user_email},
+        {"$set": {"password": hashed_password}}
+    )
+
+    return jsonify({
+        "message": "Password changed successfully"
+    }), 200
+
