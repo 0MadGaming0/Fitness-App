@@ -1,8 +1,9 @@
 /**
  * WorkoutCard.jsx — Individual workout display card with edit/delete actions
  */
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Dumbbell, Edit2, Trash2, Clock, MoreVertical } from 'lucide-react';
+import { Dumbbell, Edit2, Trash2, Clock, MoreVertical, PlayCircle, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 
 // Map exercise names to muscle groups for color coding
@@ -27,7 +28,7 @@ const colorMap = {
   slate:  'text-slate-400  bg-slate-500/10  border-slate-500/20',
 };
 
-export default function WorkoutCard({ workout, onEdit, onDelete, index = 0 }) {
+export default function WorkoutCard({ workout, onEdit, onDelete, onStart, index = 0 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const muscle = getMuscleGroup(workout.exercise);
   const colorClass = colorMap[muscle.color];
@@ -54,8 +55,15 @@ export default function WorkoutCard({ workout, onEdit, onDelete, index = 0 }) {
             <Dumbbell size={18} />
           </div>
           <div>
-            <h3 className="font-semibold text-white text-sm leading-tight">
+            <h3 className="font-semibold text-white text-sm leading-tight flex items-center gap-1.5">
               {workout.exercise}
+              <Link
+                to={`/exercises?q=${encodeURIComponent(workout.exercise)}`}
+                className="p-1 rounded-md text-violet-400 hover:text-violet-300 hover:bg-violet-600/10 transition-all"
+                title="View form guide"
+              >
+                <BookOpen size={11} />
+              </Link>
             </h3>
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full border mt-1 inline-block ${colorClass}`}>
               {muscle.label}
@@ -113,6 +121,21 @@ export default function WorkoutCard({ workout, onEdit, onDelete, index = 0 }) {
           <p className="text-xs text-slate-500 mt-0.5">Reps</p>
         </div>
       </div>
+
+      {/* Start Button */}
+      {onStart && (
+        <button
+          onClick={() => onStart(workout)}
+          className="
+            w-full mt-4 py-2.5 rounded-xl text-xs font-bold
+            bg-violet-600/10 hover:bg-violet-600 text-violet-400 hover:text-white
+            border border-violet-500/20 hover:border-violet-500
+            transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer
+          "
+        >
+          <PlayCircle size={14} /> Start Session
+        </button>
+      )}
 
       {/* Footer */}
       <div className="flex items-center gap-1.5 mt-3 text-slate-500 text-xs">

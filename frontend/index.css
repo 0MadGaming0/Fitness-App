@@ -532,3 +532,47 @@ input:-webkit-autofill:focus {
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
   }
 }
+
+/* ─── Utility animations ─── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ─── Sidebar collapsed tooltips ─── */
+a:hover .sidebar-tooltip,
+button:hover .sidebar-tooltip {
+  opacity: 1 !important;
+}
+
+/* ─── Badge Shine Effect ─── */
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+.shine-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+.shine-effect:hover::after {
+  animation: shine 0.75s ease-in-out forwards;
+}
+
+
+

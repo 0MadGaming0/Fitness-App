@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Dumbbell, Flame, Zap, Bot, Target, TrendingUp,
-  Calendar, Trophy, Plus, ArrowRight, Star
+  Calendar, Trophy, Plus, ArrowRight, Star, PlayCircle, Bell
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useWorkouts } from '../hooks/useWorkouts';
-import { useCountUp } from '../hooks/useCountUp';
+import { useActiveWorkout } from '../context/ActiveWorkoutContext';
 import Sidebar from '../components/layout/Sidebar';
 import MobileNav from '../components/layout/MobileNav';
 import PageTransition from '../components/layout/PageTransition';
@@ -18,6 +18,7 @@ import { StatCard } from '../components/ui/Card';
 import { SkeletonCard } from '../components/ui/Skeleton';
 import ProgressRing from '../components/ui/ProgressRing';
 import WeeklyBarChart from '../components/charts/WeeklyBarChart';
+import { getDashboardSummary, getDetailedAnalytics, getNotifications } from '../services/workoutService';
 
 // Daily motivational quotes
 const QUOTES = [
@@ -76,14 +77,60 @@ function computeStats(workouts) {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { workouts, loading, fetchWorkouts } = useWorkouts();
-  const [quote] = useState(() => QUOTES[Math.floor(Math.random() * QUOTES.length)]);
+  const { workouts, fetchWorkouts } = useWorkouts();
+  const { startWorkout } = useActiveWorkout();
 
-  useEffect(() => { fetchWorkouts(); }, [fetchWorkouts]);
+  const [summary, setSummary] = useState(null);
+  const [details, setDetails] = useState(null);
+  const [notificationsList, setNotificationsList] = useState([]);
+  const [dbLoading, setDbLoading] = useState(true);
 
+  useEffect(() => {
+    fetchWorkouts();
+    const loadData = async () => {
+      try {
+        const [sumRes, detRes, notRes] = await Promise.all([
+          getDashboardSummary(),
+          getDetailedAnalytics(),
+          getNotifications()
+        ]);
+        setSummary(sumRes.data);
+        setDetails(detRes.data);
+        setNotificationsList(notRes.data);
+      } catch (err) {
+        console.error('Error loading dashboard statistics:', err);
+      } finally {
+        setDbLoading(false);
+      }
+    };
+    loadData();
+  }, [fetchWorkouts]);
+
+  // Compute weekly chart locally or from workouts list
   const stats = computeStats(workouts);
-  const recentWorkouts = workouts.slice(-5).reverse();
-  const goalProgress = Math.min(Math.round((stats.total / 30) * 100), 100);
+
+  // Daily Quote (stable change daily)
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const quote = QUOTES[dayOfYear % QUOTES.length];
+
+  // Read values
+  const currentStreak = summary?.streak || 0;
+  const bestStreak = summary?.longest_streak || 0;
+  const xp = summary?.xp || 0;
+  const level = summary?.level || 1;
+  const xpInCurrentLevel = xp % 500;
+  const xpProgressPct = Math.round((xpInCurrentLevel / 500) * 100);
+
+  const totalCompleted = details?.total_workouts || 0;
+  const totalCalories = details?.total_calories || 0;
+  const totalHours = details?.total_hours || 0;
+  const totalSets = details?.total_sets || 0;
+
+  const weeklyGoalTarget = summary?.goal?.target || 5;
+  const weeklyGoalCurrent = summary?.goal?.current || 0;
+  const weeklyGoalPct = summary?.goal?.progress_pct || 0;
+
+  const nextPlanned = summary?.next_planned;
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -97,12 +144,13 @@ export default function Dashboard() {
 
   return (
     <PageTransition>
-      <div className="flex bg-[#050508]" style={{ height: '100dvh', overflow: 'hidden' }}>
+      <div className="flex bg-[var(--bg-app)]" style={{ height: '100dvh', overflow: 'hidden' }}>
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto mobile-nav-clearance">
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 40px 80px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
 
+            {/* Header Greeting + XP Tracker (Feature 7) */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -113,15 +161,33 @@ export default function Dashboard() {
               <div className="blob animate-blob w-48 h-48 bg-cyan-800 bottom-0 right-1/3 absolute opacity-10" />
 
               <div className="relative flex flex-col md:flex-row md:items-center justify-between" style={{ gap: '24px' }}>
-                <div>
+                <div className="flex-1">
                   <p className="text-slate-400 text-sm mb-1">{greeting} 👋</p>
                   <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
                     {user?.name?.split(' ')[0] || 'Athlete'}!
                   </h1>
-                  <p className="text-slate-400 max-w-2xl text-sm leading-relaxed">
-                    "{quote.text}"
-                    <span className="text-slate-600 ml-2">— {quote.author}</span>
-                  </p>
+
+                  {/* Bold Neon Daily Quote */}
+                  <div className="mt-2.5 mb-4 p-4 bg-gradient-to-r from-violet-950/20 via-slate-900/10 to-cyan-950/10 border border-violet-500/20 rounded-2xl shadow-[0_0_20px_rgba(124,58,237,0.15)] max-w-xl">
+                    <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 font-extrabold italic text-sm md:text-base leading-relaxed drop-shadow-[0_0_8px_rgba(167,139,250,0.45)]">
+                      "{quote.text}"
+                    </p>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1.5">— {quote.author}</p>
+                  </div>
+                  
+                  {/* XP Bar (Feature 7) */}
+                  <div className="max-w-md mt-4 font-sans">
+                    <div className="flex justify-between text-xs mb-2 font-bold px-1">
+                      <span className="text-violet-400 drop-shadow-[0_0_8px_rgba(167,139,250,0.4)]">Level {level}</span>
+                      <span className="text-slate-400">{xpInCurrentLevel}/500 XP to Level {level + 1}</span>
+                    </div>
+                    <div className="w-full h-3.5 bg-white/05 border border-white/08 rounded-full overflow-hidden p-[2px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <div
+                        className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(236,72,153,0.4)]"
+                        style={{ width: `${xpProgressPct}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Streak badge */}
@@ -132,28 +198,56 @@ export default function Dashboard() {
                 >
                   <div className="text-3xl">🔥</div>
                   <div>
-                    <p className="text-2xl font-black text-white">{stats.streak}</p>
-                    <p className="text-xs text-slate-400">Day Streak</p>
+                    <p className="text-2xl font-black text-white">{currentStreak}</p>
+                    <p className="text-xs text-slate-400 font-medium">Current Streak</p>
                   </div>
                 </motion.div>
               </div>
             </motion.div>
 
-            {/* ─── Stats Grid ─── */}
-            {loading ? (
+            {/* ─── Stats Grid (Feature 8) ─── */}
+            {dbLoading ? (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <StatCard icon={<Dumbbell size={18}/>} label="Total Workouts"  value={stats.total}       color="violet" delay={0.05} />
-                <StatCard icon={<Flame size={18}/>}    label="Calories Burned" value={`${stats.calories}kcal`} color="pink" delay={0.1} />
-                <StatCard icon={<Calendar size={18}/>} label="Active Days"     value={stats.activeDays}  color="cyan"   delay={0.15} />
-                <StatCard icon={<Trophy size={18}/>}   label="Best Streak"     value={`${stats.streak}d`} color="orange" delay={0.2} />
+                <StatCard icon={<Dumbbell size={18}/>} label="Total Completed"  value={totalCompleted}       color="violet" delay={0.05} />
+                <StatCard icon={<Flame size={18}/>}    label="Calories Burned" value={`${totalCalories} kcal`} color="pink" delay={0.1} />
+                <StatCard icon={<Calendar size={18}/>} label="Total Hours"     value={`${totalHours} h`}  color="cyan"   delay={0.15} />
+                <StatCard icon={<Trophy size={18}/>}   label="Best Streak"     value={`${bestStreak} days`} color="orange" delay={0.2} />
               </div>
             )}
 
-            {/* ─── Middle Row ─── */}
+            {/* ─── Next Planned Workout Template card (Feature 1) ─── */}
+            {nextPlanned && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass rounded-3xl p-5 border border-violet-500/20 flex flex-col sm:flex-row justify-between items-center gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-violet-600/20 flex items-center justify-center text-violet-400">
+                    <PlayCircle size={24} />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-white text-base">Next Planned Workout</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">{nextPlanned.exercise} — {nextPlanned.sets} sets × {nextPlanned.reps} reps</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => startWorkout(nextPlanned.exercise, nextPlanned.sets, nextPlanned.reps, 40)}
+                  className="
+                    px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold
+                    shadow-[0_4px_12px_rgba(124,58,237,0.3)] transition-all cursor-pointer border-none
+                  "
+                >
+                  Start Now
+                </button>
+              </motion.div>
+            )}
+
+            {/* ─── Middle Row (Feature 8, 10) ─── */}
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Weekly Chart */}
               <motion.div
@@ -169,28 +263,28 @@ export default function Dashboard() {
                 <WeeklyBarChart data={stats.weeklyData} />
               </motion.div>
 
-              {/* Goal Progress */}
+              {/* Weekly Goals Progress Ring (Feature 10) */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
                 className="glass rounded-2xl p-6 flex flex-col items-center justify-center gap-4"
               >
-                <h3 className="font-bold text-white self-start">Monthly Goal</h3>
+                <h3 className="font-bold text-white self-start">Weekly Goals</h3>
                 <ProgressRing
-                  progress={goalProgress}
+                  progress={weeklyGoalPct}
                   size={140}
                   strokeWidth={10}
-                  color="#7c3aed"
-                  label={`${goalProgress}%`}
+                  color="#22d3ee"
+                  label={`${weeklyGoalPct}%`}
                   sublabel="Complete"
                 />
-                <div className="text-center">
-                  <p className="text-xs text-slate-500">
-                    {stats.total} / 30 workouts
+                <div className="text-center font-sans">
+                  <p className="text-xs text-slate-400">
+                    Workout Goal: {Math.round(weeklyGoalCurrent)} / {Math.round(weeklyGoalTarget)} days
                   </p>
-                  <p className="text-xs text-violet-400 mt-1 font-medium">
-                    {Math.max(0, 30 - stats.total)} to go this month
+                  <p className="text-xs text-cyan-400 mt-1 font-semibold">
+                    {weeklyGoalCurrent >= weeklyGoalTarget ? 'Weekly target reached! 🎉' : `${Math.round(weeklyGoalTarget - weeklyGoalCurrent)} workouts left to goal`}
                   </p>
                 </div>
               </motion.div>
@@ -231,67 +325,115 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
-            {/* ─── Recent Workouts ─── */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              className="glass rounded-2xl p-6"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-white">Recent Workouts</h3>
-                <Link to="/workouts" className="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 transition-colors">
-                  View all <ArrowRight size={12} />
-                </Link>
-              </div>
-
-              {loading ? (
-                <div className="space-y-3">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-12 shimmer rounded-xl bg-white/[0.03]" />
-                  ))}
-                </div>
-              ) : recentWorkouts.length === 0 ? (
-                <div className="text-center py-10">
-                  <Dumbbell size={40} className="text-slate-700 mx-auto mb-3" />
-                  <p className="text-slate-500 text-sm">No workouts yet.</p>
-                  <Link to="/workouts">
-                    <motion.button
-                      whileHover={{ scale: 1.03 }}
-                      className="mt-3 text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 mx-auto"
-                    >
-                      <Plus size={12} /> Log your first workout
-                    </motion.button>
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* ─── Recent Workouts ─── */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="glass rounded-2xl p-6"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-white">Recent Workouts</h3>
+                  <Link to="/workouts" className="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 transition-colors">
+                    View all <ArrowRight size={12} />
                   </Link>
                 </div>
-              ) : (
-                <div className="space-y-2">
-                  {recentWorkouts.map((w, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-violet-600/15 flex items-center justify-center">
-                          <Dumbbell size={14} className="text-violet-400" />
+
+                {dbLoading ? (
+                  <div className="space-y-3">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="h-12 shimmer rounded-xl bg-white/[0.03]" />
+                    ))}
+                  </div>
+                ) : !summary?.recent_completed || summary.recent_completed.length === 0 ? (
+                  <div className="text-center py-10 font-sans">
+                    <Dumbbell size={40} className="text-slate-700 mx-auto mb-3 animate-bounce" />
+                    <p className="text-slate-500 text-sm">No completed workouts yet.</p>
+                    <Link to="/workouts">
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        className="mt-3 text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 mx-auto font-bold cursor-pointer"
+                      >
+                        <Plus size={12} /> Log your first workout
+                      </motion.button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2 font-sans">
+                    {summary.recent_completed.map((w, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-violet-600/15 flex items-center justify-center">
+                            <Dumbbell size={14} className="text-violet-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-white">{w.exercise}</p>
+                            <p className="text-xs text-slate-500">{w.sets} sets × {w.reps} reps @ {w.weight}kg</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-white">{w.exercise}</p>
-                          <p className="text-xs text-slate-500">{w.sets} sets × {w.reps} reps</p>
+                        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                          <Calendar size={11} className="text-slate-500" />
+                          <span>{w.completed_at || 'Just Now'}</span>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-slate-600">
-                        <Star size={10} className="text-yellow-500" fill="currentColor" />
-                        <span>{w.sets * w.reps} vol</span>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+
+              {/* ─── Smart Notifications Feed (Feature 12) ─── */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="glass rounded-2xl p-6"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-white flex items-center gap-2">
+                    <Bell className="text-violet-400 animate-pulse" size={16} />
+                    Notifications Feed
+                  </h3>
+                  <span className="text-xs text-slate-500">Real-time alerts</span>
                 </div>
-              )}
-            </motion.div>
+
+                {dbLoading ? (
+                  <div className="space-y-3">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="h-12 shimmer rounded-xl bg-white/[0.03]" />
+                    ))}
+                  </div>
+                ) : notificationsList.length === 0 ? (
+                  <div className="text-center py-10 font-sans">
+                    <Bell size={40} className="text-slate-700 mx-auto mb-3" />
+                    <p className="text-slate-500 text-sm">All caught up! No notifications.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2.5 font-sans overflow-y-auto max-h-[220px] pr-1">
+                    {notificationsList.map((n, i) => (
+                      <motion.div
+                        key={n._id || i}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        className="p-3 rounded-xl bg-white/[0.02] border border-white/04 hover:border-white/08 transition-all"
+                      >
+                        <p className="text-xs font-semibold text-slate-200 leading-relaxed">{n.message}</p>
+                        <span className="text-[10px] text-slate-500 mt-1 block">
+                          {new Date(n.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </div>
 
           </div>
         </main>

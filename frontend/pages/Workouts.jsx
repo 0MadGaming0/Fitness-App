@@ -5,6 +5,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Search, Filter, Dumbbell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useWorkouts } from '../hooks/useWorkouts';
+import { useActiveWorkout } from '../context/ActiveWorkoutContext';
 import Sidebar from '../components/layout/Sidebar';
 import MobileNav from '../components/layout/MobileNav';
 import PageTransition from '../components/layout/PageTransition';
@@ -28,6 +29,7 @@ const FILTER_OPTIONS = [
 
 export default function Workouts() {
   const { workouts, loading, fetchWorkouts, createWorkout, editWorkout, removeWorkout } = useWorkouts();
+  const { startWorkout } = useActiveWorkout();
   const [formOpen, setFormOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editData, setEditData] = useState(null);
@@ -89,7 +91,7 @@ export default function Workouts() {
 
   return (
     <PageTransition>
-      <div className="flex min-h-screen bg-[#050508]">
+      <div className="flex min-h-screen bg-[var(--bg-app)]">
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto mobile-nav-clearance">
@@ -236,6 +238,7 @@ export default function Workouts() {
                       index={i}
                       onEdit={handleEdit}
                       onDelete={handleDeleteClick}
+                      onStart={(w) => startWorkout(w.exercise, w.sets, w.reps, w.weight || 40)}
                     />
                   ))}
                 </div>

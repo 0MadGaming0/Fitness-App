@@ -1,27 +1,50 @@
 /**
- * Sidebar.jsx — App sidebar for authenticated pages
- * Clean, fixed-width layout for premium stability.
+ * Sidebar.jsx — Collapsible app sidebar.
+ * Expanded (240px): shows icons + labels.
+ * Collapsed (64px):  shows icons only with tooltips.
+ * State is persisted in localStorage so it survives navigation.
  */
 import { NavLink, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Zap, LayoutDashboard, BarChart3, Dumbbell,
-  Bot, User, Settings, LogOut
+  LayoutDashboard, BarChart3, Dumbbell,
+  Bot, User, Settings, LogOut, PanelLeftClose, PanelLeftOpen, BookOpen, MessageSquare, Zap
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { AvatarDisplay } from '../ui/AvatarDisplay';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
 
-const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard',  path: '/dashboard' },
-  { icon: BarChart3,      label: 'Analytics',   path: '/analytics' },
-  { icon: Dumbbell,       label: 'Workouts',    path: '/workouts' },
-  { icon: Bot,            label: 'AI Coach',    path: '/ai-coach' },
-  { icon: User,           label: 'Profile',     path: '/profile' },
-  { icon: Settings,       label: 'Settings',    path: '/settings' },
+const NAV_ITEMS = [
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+  { icon: BarChart3,       label: 'Analytics',  path: '/analytics' },
+  { icon: Dumbbell,        label: 'Workouts',   path: '/workouts'  },
+  { icon: BookOpen,        label: 'Exercises',  path: '/exercises' },
+  { icon: Bot,             label: 'AI Coach',   path: '/ai-coach'  },
+  { icon: User,            label: 'Profile',    path: '/profile'   },
+  { icon: Settings,        label: 'Settings',   path: '/settings'  },
 ];
+
+const STORAGE_KEY = 'fitai_sidebar_collapsed';
 
 export default function Sidebar() {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
+
+  const displayItems = user?.email === 'owner@fitai.com'
+    ? [...NAV_ITEMS, { icon: MessageSquare, label: 'Feedbacks', path: '/admin/feedback' }]
+    : NAV_ITEMS;
+
+  const [collapsed, setCollapsed] = useState(
+    () => localStorage.getItem(STORAGE_KEY) === 'true'
+  );
+
+  const toggle = () => {
+    setCollapsed((prev) => {
+      localStorage.setItem(STORAGE_KEY, String(!prev));
+      return !prev;
+    });
+  };
 
   const handleLogout = () => {
     logoutUser();
@@ -29,81 +52,218 @@ export default function Sidebar() {
     navigate('/login');
   };
 
+  const initials = user?.name
+    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'U';
+
+  const sidebarWidth = collapsed ? 64 : 240;
+
   return (
-    <aside className="
-      hidden md:flex flex-col
-      w-60 h-screen sticky top-0
-      glass border-r border-white/08
-      z-40 flex-shrink-0
-    ">
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/06">
-        <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
-          <Zap size={16} className="text-white" fill="white" />
+    <motion.aside
+      animate={{ width: sidebarWidth }}
+      transition={{ duration: 0.22, ease: 'easeInOut' }}
+      className="hidden md:flex flex-col h-screen sticky top-0 glass border-r border-white/08 z-40 flex-shrink-0 overflow-hidden"
+      style={{ width: sidebarWidth }}
+    >
+      {/* ─── Logo row ─── */}
+      <div
+        className="flex items-center border-b border-white/06 flex-shrink-0"
+        style={{
+          padding: '0 14px',
+          justifyContent: collapsed ? 'center' : 'space-between',
+          minHeight: '64px',
+        }}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
+            <Zap size={16} className="text-white" fill="white" />
+          </div>
+          <AnimatePresence initial={false}>
+            {!collapsed && (
+              <motion.span
+                key="logo-text"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.18 }}
+                className="text-base font-bold gradient-text whitespace-nowrap overflow-hidden"
+              >
+                FitAI
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
-        <span className="text-base font-bold gradient-text whitespace-nowrap">
-          FitAI
-        </span>
+
+        {/* Collapse button — only visible when expanded */}
+        <AnimatePresence initial={false}>
+          {!collapsed && (
+            <motion.button
+              key="collapse-btn"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              onClick={toggle}
+              title="Collapse sidebar"
+              className="flex items-center justify-center rounded-lg text-slate-500 hover:text-violet-400 hover:bg-violet-500/10 transition-all duration-200"
+              style={{ width: '30px', height: '30px', flexShrink: 0, border: 'none', cursor: 'pointer', background: 'transparent' }}
+            >
+              <PanelLeftClose size={17} />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-6 overflow-y-auto" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {navItems.map((item) => (
+      {/* ─── Nav ─── */}
+      <nav
+        className="flex-1 overflow-y-auto overflow-x-hidden"
+        style={{
+          display: 'flex', flexDirection: 'column',
+          gap: '4px',
+          padding: collapsed ? '12px 8px' : '16px 10px',
+        }}
+      >
+        {/* Expand button — only visible when collapsed, at the top of the nav */}
+        {collapsed && (
+          <button
+            onClick={toggle}
+            title="Expand sidebar"
+            className="flex items-center justify-center rounded-xl transition-all duration-200 group"
+            style={{
+              width: '100%', padding: '10px 0', marginBottom: '4px', border: 'none', cursor: 'pointer',
+              background: 'rgba(124,58,237,0.12)',
+              color: '#a78bfa',
+            }}
+          >
+            <PanelLeftOpen size={18} />
+          </button>
+        )}
+        {displayItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
+            title={collapsed ? item.label : undefined}
             className={({ isActive }) => `
-              flex items-center gap-3 px-3 py-2.5 rounded-xl
-              transition-all duration-200 group
+              flex items-center rounded-xl transition-all duration-200 group relative
+              ${collapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'}
               ${isActive
-                ? 'bg-violet-600/15 text-violet-400 border-l-2 border-violet-500 font-semibold'
-                : 'text-slate-400 hover:text-white hover:bg-white/05 border-l-2 border-transparent'
+                ? 'bg-violet-600/15 text-violet-400 font-semibold'
+                : 'text-slate-400 hover:text-white hover:bg-white/05'
               }
             `}
+            style={({ isActive }) => ({
+              borderLeft: collapsed ? 'none' : isActive ? '2px solid #8b5cf6' : '2px solid transparent',
+            })}
           >
-            <item.icon
-              size={18}
-              className="flex-shrink-0 transition-transform group-hover:scale-105"
-            />
-            <span className="text-sm font-medium">{item.label}</span>
+            <item.icon size={18} className="flex-shrink-0 transition-transform group-hover:scale-105" />
+
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.span
+                  key={`label-${item.path}`}
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.16 }}
+                  className="text-sm font-medium whitespace-nowrap overflow-hidden"
+                >
+                  {item.label}
+                </motion.span>
+              )}
+            </AnimatePresence>
+
+            {/* Tooltip when collapsed */}
+            {collapsed && (
+              <div style={{
+                position: 'absolute', left: '100%', top: '50%', transform: 'translateY(-50%)',
+                marginLeft: '10px', padding: '5px 10px', borderRadius: '8px',
+                background: 'rgba(20,20,35,0.97)', border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '12px', fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap',
+                pointerEvents: 'none', opacity: 0, zIndex: 999,
+                transition: 'opacity 0.15s',
+              }}
+              className="sidebar-tooltip"
+              >
+                {item.label}
+              </div>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      {/* User + Logout */}
-      <div className="border-t border-white/[0.05] px-4 py-4 space-y-3.5">
-        {/* User avatar row */}
+      {/* ─── User + Logout ─── */}
+      <div
+        className="border-t border-white/[0.05] flex-shrink-0"
+        style={{ padding: collapsed ? '12px 8px' : '12px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}
+      >
+        {/* User row */}
         {user && (
-          <div className="flex items-center gap-3 px-1 py-1">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-white">
-                {user.name?.charAt(0).toUpperCase() || 'U'}
-              </span>
+          <div
+            style={{
+              display: 'flex', alignItems: 'center',
+              justifyContent: collapsed ? 'center' : 'flex-start',
+              gap: '10px', padding: collapsed ? '6px 0' : '4px 4px',
+              overflow: 'hidden',
+            }}
+            title={collapsed ? `${user.name || 'User'} · ${user.email}` : undefined}
+          >
+            {/* Avatar */}
+            <div style={{ flexShrink: 0 }}>
+              <AvatarDisplay avatar={user.avatar} initials={initials} size={32} shadow={false} fontSize="11px" />
             </div>
-            <div className="overflow-hidden">
-              <p className="text-xs font-semibold text-white truncate max-w-[140px]">
-                {user.name || 'User'}
-              </p>
-              <p className="text-[10px] text-slate-500 truncate max-w-[140px]">
-                {user.email}
-              </p>
-            </div>
+
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.div
+                  key="user-info"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.16 }}
+                  style={{ overflow: 'hidden', minWidth: 0 }}
+                >
+                  <p className="text-xs font-semibold text-white truncate" style={{ maxWidth: '140px' }}>
+                    {user.name || 'User'}
+                  </p>
+                  <p className="text-[10px] text-slate-500 truncate" style={{ maxWidth: '140px' }}>
+                    {user.email}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )}
 
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className="
-            w-full flex items-center gap-3 px-3 py-2 rounded-xl
-            text-slate-400 hover:text-red-400 hover:bg-red-500/10
-            transition-all duration-200 group text-sm font-medium
-          "
+          title={collapsed ? 'Logout' : undefined}
+          className="flex items-center rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 group"
+          style={{
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            gap: collapsed ? 0 : '10px',
+            padding: collapsed ? '10px 0' : '8px 8px',
+            width: '100%',
+          }}
         >
           <LogOut size={16} className="flex-shrink-0 transition-transform group-hover:-translate-x-1" />
-          <span>Logout</span>
+          <AnimatePresence initial={false}>
+            {!collapsed && (
+              <motion.span
+                key="logout-label"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.16 }}
+                className="text-sm font-medium whitespace-nowrap overflow-hidden"
+              >
+                Logout
+              </motion.span>
+            )}
+          </AnimatePresence>
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

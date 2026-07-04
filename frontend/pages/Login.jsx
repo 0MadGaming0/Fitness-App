@@ -173,26 +173,6 @@ export default function Login() {
               </motion.button>
             </form>
 
-            {/* Divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '24px 0' }}>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.07)' }} />
-              <span style={{ fontSize: '12px', color: '#475569' }}>demo access</span>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.07)' }} />
-            </div>
-
-            {/* Demo credentials */}
-            <div style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: '12px',
-              padding: '12px',
-              textAlign: 'center',
-            }}>
-              <p style={{ fontSize: '12px', color: '#475569', marginBottom: '4px' }}>Try demo account</p>
-              <p style={{ fontSize: '12px', fontFamily: 'monospace', color: '#94a3b8' }}>
-                demo@fitai.app · demo123
-              </p>
-            </div>
           </motion.div>
 
           {/* Back */}

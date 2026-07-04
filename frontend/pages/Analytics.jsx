@@ -1,7 +1,7 @@
 /**
  * Analytics.jsx — Fitness analytics with all Recharts + heatmap + achievements
  */
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   BarChart3, Flame, TrendingUp, Target, Award,
@@ -15,12 +15,15 @@ import PageTransition from '../components/layout/PageTransition';
 import { SkeletonCard } from '../components/ui/Skeleton';
 import ProgressRing from '../components/ui/ProgressRing';
 import Badge from '../components/ui/Badge';
+import Modal from '../components/ui/Modal';
+import Confetti from '../components/ui/Confetti';
 import WeeklyBarChart from '../components/charts/WeeklyBarChart';
 import MonthlyAreaChart from '../components/charts/MonthlyAreaChart';
 import CaloriesLineChart from '../components/charts/CaloriesLineChart';
 import WorkoutPieChart from '../components/charts/WorkoutPieChart';
 import WeightLineChart from '../components/charts/WeightLineChart';
 import WorkoutHeatmap from '../components/charts/WorkoutHeatmap';
+import WorkoutCalendar from '../components/workout/WorkoutCalendar';
 
 // ─── BMI Calculator ───
 function calcBMI(weight, height) {
@@ -127,14 +130,20 @@ function deriveAnalytics(workouts) {
 }
 
 // ─── Achievement badge data ───
-function getAchievements(total, streak) {
+function getAchievements(total, streak, maxReps, totalSets, totalHours) {
   return [
     { icon: '🏋️', name: 'First Workout', description: 'Complete 1 workout', rarity: 'uncommon', earned: total >= 1 },
-    { icon: '🔥', name: '7-Day Streak', description: '7 days in a row', rarity: 'rare', earned: streak >= 7 },
+    { icon: '🏃', name: 'Cardio Lover', description: 'Log 5 total workouts', rarity: 'uncommon', earned: total >= 5 },
     { icon: '💪', name: 'Strength Builder', description: 'Log 10 workouts', rarity: 'rare', earned: total >= 10 },
+    { icon: '🔥', name: '7-Day Streak', description: '7 days in a row', rarity: 'rare', earned: streak >= 7 },
     { icon: '⚡', name: '30-Day Streak', description: '30 days in a row', rarity: 'epic', earned: streak >= 30 },
     { icon: '🎯', name: 'Consistency Master', description: '50 total workouts', rarity: 'epic', earned: total >= 50 },
     { icon: '🏆', name: 'Elite Athlete', description: '100 total workouts', rarity: 'legendary', earned: total >= 100 },
+    { icon: '🔢', name: 'Rep Machine', description: 'Do 15+ reps in a set', rarity: 'uncommon', earned: maxReps >= 15 },
+    { icon: '👑', name: 'Volume King', description: 'Log 50+ total sets', rarity: 'rare', earned: totalSets >= 50 },
+    { icon: '⚔️', name: 'Iron Warrior', description: 'Log 150+ total sets', rarity: 'epic', earned: totalSets >= 150 },
+    { icon: '⏳', name: 'Dedicated Rider', description: 'Log 5+ hours of training', rarity: 'uncommon', earned: totalHours >= 5 },
+    { icon: '🌌', name: 'Time Lord', description: 'Log 20+ hours of training', rarity: 'legendary', earned: totalHours >= 20 },
   ];
 }
 
@@ -164,12 +173,43 @@ export default function Analytics() {
     }
   }
 
-  const achievements = getAchievements(analytics.total, streak);
+  const achievements = getAchievements(
+    analytics.total,
+    streak,
+    analytics.maxReps,
+    analytics.totalSets,
+    analytics.totalHours
+  );
   const goalCompletion = Math.min(Math.round((analytics.total / 30) * 100), 100);
+
+  const [celebrationBadge, setCelebrationBadge] = useState(null);
+  const [confettiActive, setConfettiActive] = useState(false);
+
+  useEffect(() => {
+    if (loading || workouts.length === 0) return;
+
+    const earned = achievements.filter((a) => a.earned);
+    if (earned.length === 0) return;
+
+    let seen = [];
+    try {
+      seen = JSON.parse(localStorage.getItem('fitai_seen_badges') || '[]');
+    } catch {
+      seen = [];
+    }
+
+    const unseen = earned.find((b) => !seen.includes(b.name));
+    if (unseen) {
+      localStorage.setItem('fitai_seen_badges', JSON.stringify([...seen, unseen.name]));
+      setCelebrationBadge(unseen);
+      setConfettiActive(true);
+      setTimeout(() => setConfettiActive(false), 6000);
+    }
+  }, [workouts.length, loading]);
 
   return (
     <PageTransition>
-      <div className="flex min-h-screen bg-[#050508]">
+      <div className="flex min-h-screen bg-[var(--bg-app)]">
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto mobile-nav-clearance">
@@ -359,6 +399,13 @@ export default function Analytics() {
               <WorkoutHeatmap workouts={workouts} />
             </motion.div>
 
+            {/* ─── Workout Calendar (Feature 9) ─── */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.48 }}
+            >
+              <WorkoutCalendar />
+            </motion.div>
+
             {/* ─── Achievements ─── */}
             <motion.div
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
@@ -380,6 +427,53 @@ export default function Analytics() {
 
           </div>
         </main>
+
+        <Confetti active={confettiActive} />
+
+        <Modal
+          isOpen={!!celebrationBadge}
+          onClose={() => {
+            setCelebrationBadge(null);
+            setConfettiActive(false);
+          }}
+          title="🏆 New Achievement Unlocked!"
+          size="sm"
+        >
+          <div className="flex flex-col items-center text-center p-6 gap-5">
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1.2, 1, 1],
+                rotate: [0, 15, -15, 10, -10, 0],
+              }}
+              transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
+              className="text-6xl p-4 bg-gradient-to-br from-violet-600/10 to-cyan-500/10 rounded-2xl border border-violet-500/20 shadow-[0_0_40px_rgba(124,58,237,0.3)]"
+            >
+              {celebrationBadge?.icon}
+            </motion.div>
+
+            <div>
+              <h2 className="text-xl font-black text-white">{celebrationBadge?.name}</h2>
+              <p className="text-xs mt-1 uppercase tracking-widest font-bold text-violet-400">
+                {celebrationBadge?.rarity} Badge
+              </p>
+              <p className="text-slate-300 text-sm mt-3 px-4 leading-relaxed">
+                "{celebrationBadge?.description}"
+              </p>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                setCelebrationBadge(null);
+                setConfettiActive(false);
+              }}
+              className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 text-white font-bold text-sm shadow-[0_4px_15px_rgba(124,58,237,0.4)] hover:opacity-90 transition-all cursor-pointer border-none"
+            >
+              Awesome!
+            </motion.button>
+          </div>
+        </Modal>
 
         <MobileNav />
       </div>

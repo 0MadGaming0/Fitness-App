@@ -1,13 +1,46 @@
 /**
  * Landing.jsx — Clean, simple premium landing page
  */
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Zap, Brain, BarChart3, Dumbbell, ArrowRight, Star } from 'lucide-react';
+import { Zap, Brain, BarChart3, Dumbbell, ArrowRight, Star, Heart } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
 import PageTransition from '../components/layout/PageTransition';
+import api from '../services/api';
+
+const LANDING_QUOTES = [
+  { text: "No alarm clock needed. My passion wakes me up.", author: "Eric Thomas" },
+  { text: "Your health is an investment, not an expense.", author: "Unknown" },
+  { text: "Today is your chance to build the tomorrow you want.", author: "Kenji Miyazawa" },
+  { text: "If it doesn't challenge you, it doesn't change you.", author: "Fred Devito" },
+  { text: "The difference between try and triumph is just a little umph.", author: "Marvin Phillips" },
+  { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+  { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" }
+];
 
 export default function Landing() {
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const dailyQuote = LANDING_QUOTES[dayOfYear % LANDING_QUOTES.length];
+
+  const [featuredFeedbacks, setFeaturedFeedbacks] = useState([]);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await api.get('/feedback/featured');
+        setFeaturedFeedbacks(res.data);
+      } catch (err) {
+        console.error("Failed to load featured reviews:", err);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
+  const avgRating = featuredFeedbacks.length > 0
+    ? (featuredFeedbacks.reduce((acc, f) => acc + (f.rating || 5), 0) / featuredFeedbacks.length).toFixed(1)
+    : '4.9';
+
   return (
     <PageTransition>
       <div style={{ minHeight: '100vh', background: '#050508' }}>
@@ -95,13 +128,72 @@ export default function Landing() {
                 fontSize: '18px',
                 color: '#94a3b8',
                 maxWidth: '520px',
-                margin: '0 auto 40px',
+                margin: '0 auto 20px',
                 lineHeight: 1.65,
               }}
             >
               Your AI fitness coach that tracks workouts, analyzes your progress,
               and delivers personalized plans — all in one beautiful app.
             </motion.p>
+
+            {/* Rating Stars Social Proof */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                marginBottom: '36px',
+              }}
+            >
+              <div style={{ display: 'flex', gap: '2px' }}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} style={{ color: '#fbbf24', fill: '#fbbf24' }} />
+                ))}
+              </div>
+              <span style={{ fontSize: '13.5px', color: '#94a3b8', fontWeight: 700 }}>
+                {avgRating}/5 rating from user reviews
+              </span>
+            </motion.div>
+
+            {/* Bold Neon Daily Quote */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.45, duration: 0.5 }}
+              style={{
+                maxWidth: '600px',
+                margin: '0 auto 36px',
+                padding: '24px',
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.05))',
+                borderRadius: '24px',
+                border: '1px solid rgba(124,58,237,0.25)',
+                boxShadow: '0 0 35px rgba(124,58,237,0.15)',
+                backdropFilter: 'blur(12px)',
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
+                  fontWeight: 900,
+                  fontStyle: 'italic',
+                  lineHeight: 1.4,
+                  background: 'linear-gradient(to right, #a78bfa, #f472b6, #22d3ee)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  filter: 'drop-shadow(0 0 8px rgba(167,139,250,0.5))',
+                  marginBottom: '10px',
+                }}
+              >
+                "{dailyQuote.text}"
+              </p>
+              <p style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: '#64748b', letterSpacing: '0.08em' }}>
+                — {dailyQuote.author}
+              </p>
+            </motion.div>
 
             {/* CTA buttons */}
             <motion.div
@@ -160,43 +252,6 @@ export default function Landing() {
               </Link>
             </motion.div>
 
-            {/* Social proof */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: '20px', marginTop: '48px', flexWrap: 'wrap',
-                fontSize: '14px', color: '#64748b',
-              }}
-            >
-              <div style={{ display: 'flex' }}>
-                {['SC', 'MJ', 'PS', 'AR', 'KL'].map((av, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      width: '32px', height: '32px',
-                      borderRadius: '50%',
-                      border: '2px solid #050508',
-                      background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '10px', fontWeight: 700, color: '#fff',
-                      marginLeft: i === 0 ? '0' : '-8px',
-                    }}
-                  >
-                    {av}
-                  </div>
-                ))}
-              </div>
-              <span>
-                Trusted by <strong style={{ color: '#cbd5e1' }}>50,000+ athletes</strong>
-              </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#fbbf24' }}>
-                {[...Array(5)].map((_, i) => <Star key={i} size={13} fill="currentColor" />)}
-                <span style={{ color: '#64748b', marginLeft: '4px', fontSize: '12px' }}>4.9 / 5</span>
-              </div>
-            </motion.div>
           </div>
         </section>
 
@@ -271,6 +326,94 @@ export default function Landing() {
             ))}
           </div>
         </section>
+
+        {/* ─── TESTIMONIALS / USER REVIEWS ─── */}
+        {featuredFeedbacks.length > 0 && (
+          <section
+            style={{
+              maxWidth: '1080px',
+              margin: '0 auto',
+              padding: '80px 24px 40px',
+              position: 'relative',
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#fbbf24', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', tracking: '0.1em', marginBottom: '8px' }}>
+                <Star size={12} fill="currentColor" />
+                Community Wall
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#f8fafc', letterSpacing: '-0.02em' }}>
+                User Reviews & <span className="gradient-text">Ratings</span>
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: '15px', marginTop: '10px' }}>
+                Real feedback from athletes tracking consistency and building healthy habits.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featuredFeedbacks.map((fb, idx) => (
+                <motion.div
+                  key={fb._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  whileHover={{ y: -4 }}
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '24px',
+                    padding: '24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    minHeight: '160px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div className="absolute w-24 h-24 bg-violet-600/05 rounded-full blur-2xl top-0 right-0 pointer-events-none" />
+                  
+                  <div>
+                    {/* Stars */}
+                    <div style={{ display: 'flex', gap: '3px', marginBottom: '14px' }}>
+                      {[...Array(5)].map((_, starIdx) => (
+                        <Star
+                          key={starIdx}
+                          size={14}
+                          style={{ color: starIdx < (fb.rating || 5) ? '#fbbf24' : '#334155', fill: starIdx < (fb.rating || 5) ? '#fbbf24' : 'transparent' }}
+                        />
+                      ))}
+                    </div>
+
+                    <p style={{ fontSize: '13.5px', color: '#e2e8f0', lineHeight: 1.6, fontStyle: 'italic', marginBottom: '20px' }}>
+                      "{fb.comment}"
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
+                    <div style={{
+                      width: '28px', height: '28px', borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: '#fff', fontSize: '11px', fontWeight: 800,
+                    }}>
+                      {fb.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '12px', fontWeight: 700, color: '#f8fafc', margin: 0 }}>
+                        {fb.name}
+                      </p>
+                      <p style={{ fontSize: '10px', color: '#64748b', margin: '2px 0 0' }}>
+                        {fb.type}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ─── CTA BANNER ─── */}
         <section style={{ padding: '80px 24px 120px' }}>

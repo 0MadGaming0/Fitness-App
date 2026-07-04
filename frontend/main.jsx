@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ActiveWorkoutProvider } from './context/ActiveWorkoutContext';
 import App from './App';
 import './index.css';
 
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <App />
+          <ActiveWorkoutProvider>
+            <App />
+          </ActiveWorkoutProvider>
           <Toaster
             position="top-right"
             toastOptions={{

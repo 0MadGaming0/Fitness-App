@@ -18,11 +18,14 @@ const Workouts   = lazy(() => import('./pages/Workouts'));
 const AICoach    = lazy(() => import('./pages/AICoach'));
 const Profile    = lazy(() => import('./pages/Profile'));
 const Settings   = lazy(() => import('./pages/Settings'));
+const Exercises  = lazy(() => import('./pages/Exercises'));
+const ExerciseGuide = lazy(() => import('./pages/ExerciseGuide'));
+const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
 const NotFound   = lazy(() => import('./pages/NotFound'));
 
 // ─── Full-screen loading fallback ───
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-[#050508]">
+  <div className="min-h-screen flex items-center justify-center bg-[var(--bg-app)]">
     <Spinner size="lg" />
   </div>
 );
@@ -44,6 +47,10 @@ function PublicRoute({ children }) {
   return children;
 }
 
+import ActiveWorkoutWidget from './components/workout/ActiveWorkoutWidget';
+import WorkoutSummaryModal from './components/workout/WorkoutSummaryModal';
+import FeedbackWidget from './components/ui/FeedbackWidget';
+
 export default function App() {
   const location = useLocation();
 
@@ -63,11 +70,17 @@ export default function App() {
           <Route path="/ai-coach"  element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
           <Route path="/profile"   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/settings"  element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/exercises" element={<ProtectedRoute><Exercises /></ProtectedRoute>} />
+          <Route path="/exercises/:id" element={<ProtectedRoute><ExerciseGuide /></ProtectedRoute>} />
+          <Route path="/admin/feedback" element={<ProtectedRoute><AdminFeedback /></ProtectedRoute>} />
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
+      <ActiveWorkoutWidget />
+      <WorkoutSummaryModal />
+      <FeedbackWidget />
     </Suspense>
   );
 }

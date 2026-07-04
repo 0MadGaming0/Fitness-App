@@ -10,7 +10,7 @@ import PageTransition from '../components/layout/PageTransition';
 export default function NotFound() {
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#050508] flex items-center justify-center px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-[var(--bg-app)] flex items-center justify-center px-6 relative overflow-hidden">
         {/* Background blobs */}
         <div className="blob w-96 h-96 bg-violet-800 top-0 -left-32 absolute opacity-10" />
         <div className="blob blob-delay-4 w-72 h-72 bg-cyan-800 bottom-0 -right-16 absolute opacity-10" />

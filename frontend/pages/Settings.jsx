@@ -145,7 +145,7 @@ export default function Settings() {
 
   return (
     <PageTransition>
-      <div className="flex min-h-screen bg-[#050508]">
+      <div className="flex min-h-screen bg-[var(--bg-app)]">
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto mobile-nav-clearance">

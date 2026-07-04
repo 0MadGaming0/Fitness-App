@@ -3,12 +3,13 @@
  */
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, BarChart3, Dumbbell, Bot, User } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Dumbbell, Bot, User, BookOpen } from 'lucide-react';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Home',    path: '/dashboard' },
   { icon: BarChart3,      label: 'Stats',   path: '/analytics' },
   { icon: Dumbbell,       label: 'Workouts', path: '/workouts' },
+  { icon: BookOpen,       label: 'Guides',   path: '/exercises' },
   { icon: Bot,            label: 'AI',       path: '/ai-coach' },
   { icon: User,           label: 'Profile',  path: '/profile' },
 ];
