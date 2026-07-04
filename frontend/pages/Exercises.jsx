@@ -77,23 +77,23 @@ export default function Exercises() {
 
             {/* Search & Filter Bar */}
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative flex items-center">
-                <Search size={20} className="text-slate-500 absolute left-5 pointer-events-none" />
+              <div className="flex-[2] relative flex items-center">
+                <Search size={22} className="text-slate-400 absolute left-6 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search by exercise name, target muscle, or equipment..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-white/03 border border-white/06 focus:border-violet-500 rounded-full py-4.5 pl-14 pr-4 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none transition-all"
+                  className="w-full bg-white/03 border border-white/06 focus:border-violet-500 rounded-full py-4 pl-14 pr-6 text-base font-semibold text-white placeholder-slate-400 focus:outline-none transition-all"
                 />
               </div>
 
-              <div className="flex gap-3">
-                <div className="relative flex items-center">
+              <div className="flex gap-3 flex-1">
+                <div className="relative flex items-center flex-1">
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="appearance-none bg-white/03 border border-white/06 hover:border-white/10 rounded-full py-4.5 pl-5 pr-12 text-xs md:text-sm font-bold text-slate-300 focus:outline-none transition-all cursor-pointer"
+                    className="w-full appearance-none bg-white/03 border border-white/06 hover:border-white/10 rounded-full py-4 pl-6 pr-12 text-sm font-bold text-slate-300 focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="" className="bg-slate-900 text-white">All Categories</option>
                     <option value="Strength" className="bg-slate-900 text-white">Strength</option>
@@ -101,14 +101,14 @@ export default function Exercises() {
                     <option value="Cardio" className="bg-slate-900 text-white">Cardio</option>
                     <option value="Mobility" className="bg-slate-900 text-white">Mobility</option>
                   </select>
-                  <Filter size={13} className="text-slate-500 absolute right-5 pointer-events-none" />
+                  <Filter size={15} className="text-slate-500 absolute right-6 pointer-events-none" />
                 </div>
 
-                <div className="relative flex items-center">
+                <div className="relative flex items-center flex-1">
                   <select
                     value={difficulty}
                     onChange={(e) => setDifficulty(e.target.value)}
-                    className="appearance-none bg-white/03 border border-white/06 hover:border-white/10 rounded-full py-4.5 pl-5 pr-12 text-xs md:text-sm font-bold text-slate-300 focus:outline-none transition-all cursor-pointer"
+                    className="w-full appearance-none bg-white/03 border border-white/06 hover:border-white/10 rounded-full py-4 pl-6 pr-12 text-sm font-bold text-slate-300 focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="" className="bg-slate-900 text-white">All Levels</option>
                     <option value="Beginner" className="bg-slate-900 text-white">Beginner</option>
