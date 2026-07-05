@@ -1088,20 +1088,617 @@ def seed_exercises():
                 "Breathe deeply and consistently",
                 "Draw your belly button in towards your spine"
             ],
-            "alternatives": ["Side Plank", "Hollow Body Hold", "Hanging Leg Raises"],
+            "alternatives": ["Side Plank", "Hollow Body Hold", "Dead Bug"],
             "videoUrl": "https://www.youtube.com/embed/pSHjTRCQxIw",
             "thumbnailUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&auto=format&fit=crop",
             "caloriesEstimate": 120,
             "recommendedSets": 3,
             "recommendedReps": 60
+        },
+        {
+            "name": "Pull-up",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Pull-up Bar",
+            "primaryMuscles": ["Lats", "Biceps"],
+            "secondaryMuscles": ["Rear Shoulders", "Core"],
+            "instructions": [
+                "Grab the bar with an overhand grip slightly wider than shoulder-width.",
+                "Hang with arms fully extended, shoulder blades relaxed.",
+                "Pull your chest toward the bar, driving elbows down and back.",
+                "Lower yourself in a controlled manner until arms are fully extended."
+            ],
+            "commonMistakes": [
+                "Using momentum to swing up",
+                "Not achieving full range of motion",
+                "Shrugging shoulders instead of depressing them"
+            ],
+            "tips": [
+                "Initiate the pull by depressing your shoulder blades",
+                "Keep your core tight throughout",
+                "Cross your feet to reduce swinging"
+            ],
+            "alternatives": ["Lat Pulldown", "Assisted Pull-up", "Inverted Row"],
+            "videoUrl": "https://www.youtube.com/embed/eGo4IYlbE5g",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 200,
+            "recommendedSets": 3,
+            "recommendedReps": 8
+        },
+        {
+            "name": "Overhead Press",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Barbell",
+            "primaryMuscles": ["Shoulders", "Triceps"],
+            "secondaryMuscles": ["Upper Chest", "Core"],
+            "instructions": [
+                "Stand with feet shoulder-width apart, bar resting on upper chest.",
+                "Grip the bar just outside shoulder width.",
+                "Press the bar overhead in a straight line, tilting head back slightly.",
+                "Lock out overhead with arms fully extended.",
+                "Lower the bar back to the starting position under control."
+            ],
+            "commonMistakes": [
+                "Leaning back excessively and turning it into an incline press",
+                "Flaring elbows too wide at the bottom",
+                "Not engaging the core and lower back"
+            ],
+            "tips": [
+                "Squeeze your glutes and abs to protect your lower back",
+                "Think about pushing your head through your arms at the top",
+                "Use a hip pop to initiate the lift if doing push press"
+            ],
+            "alternatives": ["Dumbbell Shoulder Press", "Arnold Press", "Pike Push-up"],
+            "videoUrl": "https://www.youtube.com/embed/2yjwXTZQDDI",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 210,
+            "recommendedSets": 4,
+            "recommendedReps": 8
+        },
+        {
+            "name": "Dumbbell Chest Press",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "equipment": "Dumbbells, Bench",
+            "primaryMuscles": ["Chest", "Triceps"],
+            "secondaryMuscles": ["Front Shoulders"],
+            "instructions": [
+                "Lie on a bench holding a dumbbell in each hand at chest level.",
+                "Press the dumbbells up and slightly together.",
+                "Lower the dumbbells slowly back to chest level.",
+                "Repeat for the desired number of reps."
+            ],
+            "commonMistakes": [
+                "Letting the elbows flare too wide",
+                "Allowing the lower back to arch off the bench",
+                "Dropping the weight instead of lowering under control"
+            ],
+            "tips": [
+                "Maintain a slight arch in your upper back only",
+                "Squeeze your chest at the top of the movement",
+                "Control the negative (lowering) portion"
+            ],
+            "alternatives": ["Bench Press", "Cable Chest Fly", "Chest Press Machine"],
+            "videoUrl": "https://www.youtube.com/embed/VmB1G1K7v94",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 200,
+            "recommendedSets": 3,
+            "recommendedReps": 12
+        },
+        {
+            "name": "Barbell Row",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Barbell",
+            "primaryMuscles": ["Lats", "Rhomboids", "Biceps"],
+            "secondaryMuscles": ["Rear Shoulders", "Lower Back"],
+            "instructions": [
+                "Stand with feet hip-width apart. Bend over until torso is roughly 45 degrees.",
+                "Grab the barbell with a shoulder-width overhand grip.",
+                "Pull the bar toward your lower chest, driving elbows back.",
+                "Lower the bar in a controlled manner back to the starting position."
+            ],
+            "commonMistakes": [
+                "Using momentum to row the bar instead of muscle",
+                "Rounding your lower back",
+                "Pulling to the wrong position (too high or too low)"
+            ],
+            "tips": [
+                "Keep your back flat and core braced throughout",
+                "Think about pulling with your elbows, not your hands",
+                "Squeeze your shoulder blades together at the top"
+            ],
+            "alternatives": ["Dumbbell Row", "Cable Row", "Chest-Supported Row"],
+            "videoUrl": "https://www.youtube.com/embed/FWJR5Ve8bnQ",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 240,
+            "recommendedSets": 4,
+            "recommendedReps": 10
+        },
+        {
+            "name": "Romanian Deadlift",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Barbell",
+            "primaryMuscles": ["Hamstrings", "Glutes"],
+            "secondaryMuscles": ["Lower Back", "Core"],
+            "instructions": [
+                "Stand holding a barbell at hip level with an overhand grip.",
+                "Keep knees slightly bent and push your hips back as you lower the bar.",
+                "Lower the bar along your legs until you feel a stretch in your hamstrings.",
+                "Drive your hips forward to return to standing."
+            ],
+            "commonMistakes": [
+                "Bending knees too much, turning it into a deadlift",
+                "Rounding the lower back",
+                "Not feeling tension in the hamstrings"
+            ],
+            "tips": [
+                "Keep the bar close to your legs at all times",
+                "Focus on the hip hinge, not bending your knees",
+                "Go as low as your hamstring flexibility allows"
+            ],
+            "alternatives": ["Deadlift", "Good Morning", "Nordic Curl"],
+            "videoUrl": "https://www.youtube.com/embed/JCXUYuzwNrM",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1598132346108-1f62ee81a274?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 260,
+            "recommendedSets": 3,
+            "recommendedReps": 10
+        },
+        {
+            "name": "Lat Pulldown",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "equipment": "Cable Machine",
+            "primaryMuscles": ["Lats", "Biceps"],
+            "secondaryMuscles": ["Rear Shoulders", "Core"],
+            "instructions": [
+                "Sit at a cable machine and grip the bar slightly wider than shoulder-width.",
+                "Lean back slightly and pull the bar down to your upper chest.",
+                "Squeeze your lats at the bottom, then return bar to top slowly."
+            ],
+            "commonMistakes": [
+                "Pulling the bar behind the neck",
+                "Using too much momentum",
+                "Shrugging instead of depressing the shoulder blades"
+            ],
+            "tips": [
+                "Initiate the movement by pulling your shoulder blades down first",
+                "Keep your chest up and core braced",
+                "Control the weight on the way back up"
+            ],
+            "alternatives": ["Pull-up", "Cable Row", "Dumbbell Row"],
+            "videoUrl": "https://www.youtube.com/embed/CAwf7n6Luuc",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1517344368193-41552b6ad3f5?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 190,
+            "recommendedSets": 3,
+            "recommendedReps": 12
+        },
+        {
+            "name": "Bulgarian Split Squat",
+            "category": "Strength",
+            "difficulty": "Advanced",
+            "equipment": "Dumbbells, Bench",
+            "primaryMuscles": ["Quads", "Glutes"],
+            "secondaryMuscles": ["Hamstrings", "Core"],
+            "instructions": [
+                "Stand a couple of feet in front of a bench, holding dumbbells.",
+                "Place the top of your rear foot on the bench.",
+                "Lower your back knee toward the floor, keeping front shin vertical.",
+                "Push through your front heel to return to the starting position."
+            ],
+            "commonMistakes": [
+                "Front knee caving inward",
+                "Leaning too far forward",
+                "Standing too close to the bench"
+            ],
+            "tips": [
+                "Keep most of your weight through your front foot",
+                "Look straight ahead for balance",
+                "Keep your torso upright"
+            ],
+            "alternatives": ["Squat", "Lunges", "Step-up"],
+            "videoUrl": "https://www.youtube.com/embed/2C-uNgKwPLE",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 270,
+            "recommendedSets": 3,
+            "recommendedReps": 10
+        },
+        {
+            "name": "Dumbbell Lateral Raise",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "equipment": "Dumbbells",
+            "primaryMuscles": ["Lateral Deltoids"],
+            "secondaryMuscles": ["Front Shoulders", "Traps"],
+            "instructions": [
+                "Stand holding light dumbbells at your sides.",
+                "Raise your arms to the side until they are parallel to the floor.",
+                "Pause briefly at the top, then lower slowly."
+            ],
+            "commonMistakes": [
+                "Using momentum to swing the weights",
+                "Going too heavy and compensating with traps",
+                "Not controlling the negative portion"
+            ],
+            "tips": [
+                "Keep a slight bend in your elbows throughout",
+                "Lead with your elbows, not your wrists",
+                "Lighter weight with strict form beats heavy and sloppy"
+            ],
+            "alternatives": ["Cable Lateral Raise", "Machine Lateral Raise", "Overhead Press"],
+            "videoUrl": "https://www.youtube.com/embed/3VcKaXpzqRo",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 150,
+            "recommendedSets": 3,
+            "recommendedReps": 15
+        },
+        {
+            "name": "Bicep Curl",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "equipment": "Dumbbells",
+            "primaryMuscles": ["Biceps"],
+            "secondaryMuscles": ["Forearms"],
+            "instructions": [
+                "Stand holding dumbbells at arm's length with palms facing forward.",
+                "Curl the weights up toward your shoulders, keeping elbows tucked.",
+                "Squeeze at the top, then lower slowly back to the starting position."
+            ],
+            "commonMistakes": [
+                "Swinging the torso to help lift the weight",
+                "Not fully extending the arms at the bottom",
+                "Letting elbows flare out to the sides"
+            ],
+            "tips": [
+                "Keep your elbows pinned at your sides throughout",
+                "Supinate (rotate) your palms as you curl for full contraction",
+                "Control the lowering phase for more time under tension"
+            ],
+            "alternatives": ["Barbell Curl", "Hammer Curl", "Cable Curl"],
+            "videoUrl": "https://www.youtube.com/embed/ykJmrZ5v0Oo",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1581009137042-c552e485697a?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 140,
+            "recommendedSets": 3,
+            "recommendedReps": 12
+        },
+        {
+            "name": "Tricep Dip",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Parallel Bars",
+            "primaryMuscles": ["Triceps"],
+            "secondaryMuscles": ["Chest", "Front Shoulders"],
+            "instructions": [
+                "Grip parallel bars and support your body weight with arms locked out.",
+                "Lean slightly forward and lower your body by bending your elbows.",
+                "Lower until your upper arms are roughly parallel to the floor.",
+                "Push back up until arms are locked out."
+            ],
+            "commonMistakes": [
+                "Flaring elbows too far outward",
+                "Not going through the full range of motion",
+                "Shrugging shoulders at the top"
+            ],
+            "tips": [
+                "Control the descent for 2-3 seconds",
+                "Keep your chest up and don't round your back",
+                "Add weight with a belt once bodyweight becomes easy"
+            ],
+            "alternatives": ["Bench Dip", "Cable Pushdown", "Close-Grip Bench Press"],
+            "videoUrl": "https://www.youtube.com/embed/wjUmnZH528Y",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1598632640487-6ea4a4e8b963?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 175,
+            "recommendedSets": 3,
+            "recommendedReps": 12
+        },
+        {
+            "name": "Lunges",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "equipment": "Bodyweight",
+            "primaryMuscles": ["Quads", "Glutes"],
+            "secondaryMuscles": ["Hamstrings", "Core"],
+            "instructions": [
+                "Stand with feet together and hands on your hips.",
+                "Step one foot forward and lower your back knee toward the ground.",
+                "Keep your front shin vertical and chest upright.",
+                "Push off the front foot to return to the starting position."
+            ],
+            "commonMistakes": [
+                "Front knee going past the toe",
+                "Leaning the torso forward",
+                "Taking too short of a step"
+            ],
+            "tips": [
+                "Take a big enough step so your front shin stays vertical",
+                "Keep your core braced and shoulders back",
+                "Look straight ahead to maintain balance"
+            ],
+            "alternatives": ["Bulgarian Split Squat", "Step-up", "Squat"],
+            "videoUrl": "https://www.youtube.com/embed/QOVaHwm-Q6U",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 230,
+            "recommendedSets": 3,
+            "recommendedReps": 12
+        },
+        {
+            "name": "Cable Chest Fly",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Cable Machine",
+            "primaryMuscles": ["Chest"],
+            "secondaryMuscles": ["Front Shoulders"],
+            "instructions": [
+                "Set cables at chest height on both sides.",
+                "Stand in the middle and grab both handles, stepping forward slightly.",
+                "With a slight bend in the elbows, bring your hands together in front of you.",
+                "Slowly return to the starting position, feeling the stretch."
+            ],
+            "commonMistakes": [
+                "Bending elbows too much, turning it into a press",
+                "Using too much weight and relying on momentum",
+                "Not fully squeezing the chest at the peak contraction"
+            ],
+            "tips": [
+                "Imagine hugging a large tree",
+                "Keep a consistent elbow angle throughout",
+                "Control the return to feel the full stretch"
+            ],
+            "alternatives": ["Dumbbell Fly", "Pec Deck", "Bench Press"],
+            "videoUrl": "https://www.youtube.com/embed/Iwe6AmxVf7o",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1547919307-1ecb10702e6f?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 180,
+            "recommendedSets": 3,
+            "recommendedReps": 15
+        },
+        {
+            "name": "Burpee",
+            "category": "Cardio",
+            "difficulty": "Intermediate",
+            "equipment": "Bodyweight",
+            "primaryMuscles": ["Full Body"],
+            "secondaryMuscles": ["Cardiorespiratory System"],
+            "instructions": [
+                "Stand with feet shoulder-width apart.",
+                "Drop your hands to the floor and jump your feet back into a push-up position.",
+                "Do one push-up, then jump your feet back toward your hands.",
+                "Explode upward, jumping with arms overhead."
+            ],
+            "commonMistakes": [
+                "Sagging hips during the push-up portion",
+                "Landing with stiff knees on the jump",
+                "Rushing without proper form"
+            ],
+            "tips": [
+                "Scale by stepping instead of jumping if needed",
+                "Breathe out on the exertion (jump phase)",
+                "Keep a steady rhythm rather than going too fast"
+            ],
+            "alternatives": ["Mountain Climber", "Jumping Jacks", "Box Jump"],
+            "videoUrl": "https://www.youtube.com/embed/dZgVxmf6jkA",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 350,
+            "recommendedSets": 3,
+            "recommendedReps": 10
+        },
+        {
+            "name": "Mountain Climber",
+            "category": "Cardio",
+            "difficulty": "Beginner",
+            "equipment": "Bodyweight",
+            "primaryMuscles": ["Core", "Hip Flexors"],
+            "secondaryMuscles": ["Shoulders", "Quads"],
+            "instructions": [
+                "Start in a high plank position with arms fully extended.",
+                "Drive one knee toward your chest, then quickly switch legs.",
+                "Keep your hips level and core tight throughout."
+            ],
+            "commonMistakes": [
+                "Letting hips rise up or sag down",
+                "Bouncing off the arms rather than driving the knees",
+                "Holding your breath"
+            ],
+            "tips": [
+                "The faster you go, the more cardio benefit you get",
+                "Keep shoulders directly over wrists",
+                "Breathe rhythmically"
+            ],
+            "alternatives": ["Plank", "Burpee", "High Knees"],
+            "videoUrl": "https://www.youtube.com/embed/nmwgirgXLYM",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 300,
+            "recommendedSets": 3,
+            "recommendedReps": 30
+        },
+        {
+            "name": "Hip Thrust",
+            "category": "Strength",
+            "difficulty": "Intermediate",
+            "equipment": "Barbell, Bench",
+            "primaryMuscles": ["Glutes"],
+            "secondaryMuscles": ["Hamstrings", "Core"],
+            "instructions": [
+                "Sit on the floor with your upper back against a bench.",
+                "Roll a barbell over your hips and place feet flat on the floor.",
+                "Drive your hips up by squeezing your glutes until your body is level.",
+                "Lower your hips back to the floor with control."
+            ],
+            "commonMistakes": [
+                "Hyperextending the lower back at the top",
+                "Not fully extending the hips",
+                "Letting feet slide during the movement"
+            ],
+            "tips": [
+                "Use a pad on the barbell to protect your hips",
+                "Tuck your chin to keep your spine neutral",
+                "Pause and squeeze hard at the top"
+            ],
+            "alternatives": ["Glute Bridge", "Cable Kickback", "Romanian Deadlift"],
+            "videoUrl": "https://www.youtube.com/embed/SEdqd1n0cvg",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1596357395217-80de13130e92?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 210,
+            "recommendedSets": 4,
+            "recommendedReps": 12
+        },
+        {
+            "name": "Side Plank",
+            "category": "Core",
+            "difficulty": "Beginner",
+            "equipment": "Bodyweight",
+            "primaryMuscles": ["Obliques"],
+            "secondaryMuscles": ["Abdominals", "Shoulders"],
+            "instructions": [
+                "Lie on your side with legs stacked, forearm on the floor.",
+                "Lift your hips off the floor to form a straight line.",
+                "Hold the position, keeping your body rigid."
+            ],
+            "commonMistakes": [
+                "Letting hips drop toward the floor",
+                "Rotating the torso forward or backward",
+                "Bracing only one side and neglecting the other"
+            ],
+            "tips": [
+                "Stack your feet or stagger them for better balance",
+                "Reach your free arm toward the ceiling for extra challenge",
+                "Work both sides equally"
+            ],
+            "alternatives": ["Plank", "Dead Bug", "Russian Twist"],
+            "videoUrl": "https://www.youtube.com/embed/_rdfjFSFKMY",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 100,
+            "recommendedSets": 3,
+            "recommendedReps": 30
+        },
+        {
+            "name": "Russian Twist",
+            "category": "Core",
+            "difficulty": "Intermediate",
+            "equipment": "Bodyweight / Weight Plate",
+            "primaryMuscles": ["Obliques", "Abdominals"],
+            "secondaryMuscles": ["Hip Flexors"],
+            "instructions": [
+                "Sit on the floor with knees bent, feet slightly off the floor.",
+                "Lean back slightly to engage your core.",
+                "Hold a weight plate or clasp your hands, and rotate your torso side to side."
+            ],
+            "commonMistakes": [
+                "Moving only your arms instead of your torso",
+                "Holding your breath",
+                "Rounding your lower back"
+            ],
+            "tips": [
+                "Keep your chest tall and spine neutral",
+                "Go slow and controlled to maximize muscle activation",
+                "For more difficulty, extend legs out further"
+            ],
+            "alternatives": ["Side Plank", "Bicycle Crunch", "Cable Wood Chop"],
+            "videoUrl": "https://www.youtube.com/embed/wkD8rjkodUI",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 130,
+            "recommendedSets": 3,
+            "recommendedReps": 20
+        },
+        {
+            "name": "Box Jump",
+            "category": "Cardio",
+            "difficulty": "Intermediate",
+            "equipment": "Plyo Box",
+            "primaryMuscles": ["Quads", "Glutes", "Calves"],
+            "secondaryMuscles": ["Hamstrings", "Core"],
+            "instructions": [
+                "Stand in front of a sturdy box with feet shoulder-width apart.",
+                "Bend your knees and swing your arms back.",
+                "Explode upward and land softly on top of the box with bent knees.",
+                "Step down carefully and repeat."
+            ],
+            "commonMistakes": [
+                "Landing with straight legs instead of soft knees",
+                "Jumping from a box that is too high",
+                "Not fully extending hips at the top"
+            ],
+            "tips": [
+                "Land as softly as possible to protect your joints",
+                "Always step down rather than jumping off",
+                "Start with a lower box and build up progressively"
+            ],
+            "alternatives": ["Squat Jump", "Step-up", "Burpee"],
+            "videoUrl": "https://www.youtube.com/embed/NBY9-kTuHEk",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 320,
+            "recommendedSets": 4,
+            "recommendedReps": 8
+        },
+        {
+            "name": "Yoga Sun Salutation",
+            "category": "Mobility",
+            "difficulty": "Beginner",
+            "equipment": "Yoga Mat",
+            "primaryMuscles": ["Full Body"],
+            "secondaryMuscles": ["Spine", "Hips"],
+            "instructions": [
+                "Start in Mountain Pose (standing upright, hands at sides).",
+                "Inhale and sweep arms overhead into Upward Salute.",
+                "Exhale and fold forward into Standing Forward Bend.",
+                "Step back into Plank Pose and lower to Chaturanga.",
+                "Inhale into Upward Dog, then exhale into Downward Dog.",
+                "Walk feet forward, rise back up and repeat."
+            ],
+            "commonMistakes": [
+                "Rushing through the sequence without breath",
+                "Collapsing the lower back in Upward Dog",
+                "Not engaging the core in Plank"
+            ],
+            "tips": [
+                "Move with your breath — one movement per breath",
+                "Modify poses as needed for your flexibility",
+                "Focus on lengthening the spine in every pose"
+            ],
+            "alternatives": ["Hip Flexor Stretch", "Cat-Cow Stretch", "Downward Dog"],
+            "videoUrl": "https://www.youtube.com/embed/73sjOu0g58M",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 100,
+            "recommendedSets": 1,
+            "recommendedReps": 5
+        },
+        {
+            "name": "Hip Flexor Stretch",
+            "category": "Mobility",
+            "difficulty": "Beginner",
+            "equipment": "Bodyweight",
+            "primaryMuscles": ["Hip Flexors"],
+            "secondaryMuscles": ["Quads", "Lower Back"],
+            "instructions": [
+                "Kneel on one knee with the other foot in front, forming a 90-degree angle.",
+                "Shift your weight forward, feeling a stretch in the front of the rear hip.",
+                "Hold for 20-30 seconds, then switch sides."
+            ],
+            "commonMistakes": [
+                "Arching the lower back instead of tilting the pelvis",
+                "Not sinking deep enough to feel the stretch",
+                "Holding your breath"
+            ],
+            "tips": [
+                "Squeeze the glute of the kneeling leg to deepen the stretch",
+                "Keep your torso upright and chest tall",
+                "Breathe deeply throughout the hold"
+            ],
+            "alternatives": ["Pigeon Pose", "Couch Stretch", "Yoga Sun Salutation"],
+            "videoUrl": "https://www.youtube.com/embed/YqF8GHm5RpI",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop",
+            "caloriesEstimate": 60,
+            "recommendedSets": 2,
+            "recommendedReps": 30
         }
     ]
 
-    for ex in seed_list:
-        if not exercises.find_one({"name": ex["name"]}):
-            exercises.insert_one(ex)
+    # Drop all existing exercises to remove duplicates, then re-seed cleanly
+    exercises.drop()
+    if seed_list:
+        exercises.insert_many(seed_list)
 
-    return jsonify({"message": "Exercises collection seeded successfully"}), 200
+    return jsonify({"message": f"Exercises seeded with {len(seed_list)} exercises"}), 200
 
 
 # ==========================
