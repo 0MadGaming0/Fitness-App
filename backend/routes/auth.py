@@ -978,7 +978,7 @@ def seed_exercises():
             "caloriesEstimate": 220,
             "recommendedSets": 4,
             "recommendedReps": 10,
-            "dataVersion": 4
+            "dataVersion": 5
         },
         {
             "name": "Squat",
@@ -1686,7 +1686,7 @@ def seed_exercises():
                 "Breathe deeply throughout the hold"
             ],
             "alternatives": ["Pigeon Pose", "Couch Stretch", "Yoga Sun Salutation"],
-            "videoUrl": "https://www.youtube.com/embed/YwV6063t9bE",
+            "videoUrl": "https://www.youtube.com/embed/kS6_91380s0",
             "thumbnailUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop",
             "caloriesEstimate": 60,
             "recommendedSets": 2,
