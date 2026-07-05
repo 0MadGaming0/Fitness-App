@@ -83,13 +83,14 @@ export default function Exercises() {
             {/* Search & Filter Bar */}
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-[2] relative flex items-center">
-                <Search size={22} className="text-slate-400 absolute left-6 pointer-events-none" />
+                <Search size={18} className="text-slate-400 absolute left-5 z-10 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search by exercise name, target muscle, or equipment..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-white/03 border border-white/06 focus:border-violet-500 rounded-full py-4 pl-14 pr-6 text-base font-semibold text-white placeholder-slate-400 focus:outline-none transition-all"
+                  style={{ paddingLeft: '2.75rem' }}
+                  className="w-full bg-white/03 border border-white/06 focus:border-violet-500 rounded-full py-4 pr-6 text-base font-semibold text-white placeholder-slate-400 focus:outline-none transition-all"
                 />
               </div>
 
