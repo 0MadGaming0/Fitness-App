@@ -210,6 +210,49 @@ def update_profile():
 
 
 # ==========================
+# Public Profile (no auth)
+# ==========================
+
+@auth.route("/public-profile/<user_id>", methods=["GET"])
+def public_profile(user_id):
+    """Return public info for a user — only if they've enabled publicProfile."""
+    try:
+        obj_id = ObjectId(user_id)
+    except Exception:
+        return jsonify({"message": "Invalid user ID"}), 400
+
+    user = users.find_one({"_id": obj_id}, {"password": 0})
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    settings = user.get("settings", {})
+    privacy   = settings.get("privacy", {})
+
+    if not privacy.get("publicProfile", False):
+        return jsonify({"message": "This profile is private"}), 403
+
+    # Build safe public payload
+    public_data = {
+        "name":   user.get("name", "Athlete"),
+        "goal":   user.get("goal"),
+        "avatar": user.get("avatar"),
+        "level":  user.get("level", 1),
+        "xp":     user.get("xp", 0),
+        "streak": user.get("streak", 0),
+    }
+
+    # Include workout count only if shareWorkouts is also enabled
+    if privacy.get("shareWorkouts", False):
+        completed_count = workout_sessions.count_documents({
+            "email": user.get("email"),
+            "status": "completed"
+        })
+        public_data["completedWorkouts"] = completed_count
+
+    return jsonify(public_data), 200
+
+
+# ==========================
 # Add Workout
 # ==========================
 

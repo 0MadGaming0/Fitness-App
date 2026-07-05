@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Settings as SettingsIcon, Moon, Sun, Bell, Shield, LogOut,
-  ChevronRight, Check, Trash2, Lock, Save
+  ChevronRight, Check, Trash2, Lock, Save, Link2, Copy
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -316,15 +316,47 @@ export default function Settings() {
                   onChange={(v) => handlePrivacyChange('publicProfile', v)}
                 />
               </SettingRow>
+
+              {/* Shareable link — shown when Public Profile is on */}
+              {privacy.publicProfile && user?._id && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mx-1 mb-2 mt-1 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-violet-600/10 border border-violet-500/20"
+                >
+                  <Link2 size={13} className="text-violet-400 flex-shrink-0" />
+                  <span className="text-xs text-slate-400 truncate flex-1">
+                    {`${window.location.origin}/public-profile/${user._id}`}
+                  </span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${window.location.origin}/public-profile/${user._id}`);
+                      toast.success('Link copied!');
+                    }}
+                    className="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 font-semibold cursor-pointer transition-colors flex-shrink-0"
+                  >
+                    <Copy size={12} />
+                    Copy
+                  </button>
+                </motion.div>
+              )}
+
               <SettingRow
                 icon={Shield}
                 title="Share Workouts"
-                desc="Allow friends to see your workouts"
+                desc={privacy.publicProfile ? 'Allow friends to see your workouts' : 'Enable Public Profile first'}
                 iconColor="blue"
               >
                 <Toggle
                   checked={privacy.shareWorkouts}
-                  onChange={(v) => handlePrivacyChange('shareWorkouts', v)}
+                  onChange={(v) => {
+                    if (!privacy.publicProfile) {
+                      toast.error('Enable Public Profile first to share workouts');
+                      return;
+                    }
+                    handlePrivacyChange('shareWorkouts', v);
+                  }}
                 />
               </SettingRow>
               <SettingRow
