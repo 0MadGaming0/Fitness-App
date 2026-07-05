@@ -193,7 +193,7 @@ def update_profile():
     # Only update fields that are actually present in the request body.
     # This allows partial updates (e.g. avatar-only) without overwriting
     # existing values with None.
-    allowed_fields = ["name", "age", "weight", "height", "goal", "avatar"]
+    allowed_fields = ["name", "age", "weight", "height", "goal", "avatar", "settings"]
     update_data = {k: data[k] for k in allowed_fields if k in data}
 
     if not update_data:

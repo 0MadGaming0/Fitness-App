@@ -1,15 +1,17 @@
 /**
- * Settings.jsx — App settings: theme, notifications, account, privacy
+ * Settings.jsx — App settings: theme, notifications, account, privacy.
+ * All toggles are persisted to the backend via PUT /profile { settings: {...} }.
  */
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Settings as SettingsIcon, Moon, Sun, Bell, Shield, LogOut,
-  ChevronRight, Check, Trash2, Lock
+  ChevronRight, Check, Trash2, Lock, Save
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { updateProfile } from '../services/profileService';
 import Sidebar from '../components/layout/Sidebar';
 import MobileNav from '../components/layout/MobileNav';
 import PageTransition from '../components/layout/PageTransition';
@@ -19,14 +21,31 @@ import Modal from '../components/ui/Modal';
 import { changePassword } from '../services/authService';
 import toast from 'react-hot-toast';
 
+// ─── Default settings (used when user has none saved) ───────────────────────
+const DEFAULT_NOTIFICATIONS = {
+  push: true,
+  email: false,
+  workoutReminder: true,
+  achievements: true,
+};
+
+const DEFAULT_PRIVACY = {
+  publicProfile: false,
+  shareWorkouts: false,
+  analyticsOpt: true,
+};
+
+// ─── Toggle component ────────────────────────────────────────────────────────
 function Toggle({ checked, onChange }) {
   return (
     <button
       onClick={() => onChange(!checked)}
       className={`
-        relative w-11 h-6 rounded-full transition-colors duration-300
+        relative w-11 h-6 rounded-full transition-colors duration-300 cursor-pointer
         ${checked ? 'bg-violet-600' : 'bg-white/10'}
       `}
+      aria-checked={checked}
+      role="switch"
     >
       <motion.div
         animate={{ x: checked ? 22 : 2 }}
@@ -37,6 +56,7 @@ function Toggle({ checked, onChange }) {
   );
 }
 
+// ─── Setting row ─────────────────────────────────────────────────────────────
 function SettingRow({ icon: Icon, title, desc, children, iconColor = 'violet' }) {
   const colorMap = {
     violet: 'bg-violet-600/15 text-violet-400',
@@ -62,11 +82,13 @@ function SettingRow({ icon: Icon, title, desc, children, iconColor = 'violet' })
   );
 }
 
-function SettingSection({ title, children }) {
+// ─── Setting section card ─────────────────────────────────────────────────────
+function SettingSection({ title, children, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
       className="glass rounded-2xl p-5"
     >
       <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{title}</h3>
@@ -75,19 +97,79 @@ function SettingSection({ title, children }) {
   );
 }
 
+// ─── Main Page ───────────────────────────────────────────────────────────────
 export default function Settings() {
   const { isDark, toggleTheme } = useTheme();
-  const { logoutUser } = useAuth();
+  const { user, refreshUser, logoutUser } = useAuth();
   const navigate = useNavigate();
 
+  // ── Password modal state ──
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
-  const [loading, setLoading] = useState(false);
+  const [pwLoading, setPwLoading] = useState(false);
 
+  // ── Settings state — seeded from user.settings once user loads ──
+  const [notifications, setNotifications] = useState(DEFAULT_NOTIFICATIONS);
+  const [privacy, setPrivacy]             = useState(DEFAULT_PRIVACY);
+  const [saving, setSaving]               = useState(false);
+  const initialized = useRef(false);
+
+  // Seed from backend on first user load
+  useEffect(() => {
+    if (user && !initialized.current) {
+      initialized.current = true;
+      const saved = user.settings || {};
+      setNotifications({ ...DEFAULT_NOTIFICATIONS, ...(saved.notifications || {}) });
+      setPrivacy({ ...DEFAULT_PRIVACY, ...(saved.privacy || {}) });
+    }
+  }, [user]);
+
+  // ── Persist settings to backend ──
+  const saveSettingsRef = useRef(null);
+
+  const persistSettings = useCallback(async (notifs, priv) => {
+    setSaving(true);
+    try {
+      await updateProfile({
+        settings: {
+          notifications: notifs,
+          privacy: priv,
+        },
+      });
+      await refreshUser();
+      toast.success('Settings saved!', { id: 'settings-save', duration: 1500 });
+    } catch {
+      toast.error('Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  }, [refreshUser]);
+
+  // Debounced save — fires 800ms after last toggle change
+  const debouncedSave = useCallback((notifs, priv) => {
+    if (saveSettingsRef.current) clearTimeout(saveSettingsRef.current);
+    saveSettingsRef.current = setTimeout(() => {
+      persistSettings(notifs, priv);
+    }, 800);
+  }, [persistSettings]);
+
+  const handleNotifChange = (key, value) => {
+    const next = { ...notifications, [key]: value };
+    setNotifications(next);
+    debouncedSave(next, privacy);
+  };
+
+  const handlePrivacyChange = (key, value) => {
+    const next = { ...privacy, [key]: value };
+    setPrivacy(next);
+    debouncedSave(notifications, next);
+  };
+
+  // ── Change Password ──
   const handlePasswordChangeSubmit = async (e) => {
     e.preventDefault();
     if (!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword) {
@@ -103,7 +185,7 @@ export default function Settings() {
       return;
     }
 
-    setLoading(true);
+    setPwLoading(true);
     try {
       const response = await changePassword({
         currentPassword: passwords.currentPassword,
@@ -115,24 +197,11 @@ export default function Settings() {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to update password');
     } finally {
-      setLoading(false);
+      setPwLoading(false);
     }
   };
 
-  const [notifications, setNotifications] = useState({
-    push: true,
-    email: false,
-    workoutReminder: true,
-    weeklyReport: true,
-    achievements: true,
-  });
-
-  const [privacy, setPrivacy] = useState({
-    publicProfile: false,
-    shareWorkouts: false,
-    analyticsOpt: true,
-  });
-
+  // ── Logout / Delete ──
   const handleLogout = () => {
     logoutUser();
     toast.success('Logged out successfully');
@@ -153,15 +222,29 @@ export default function Settings() {
 
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-              <h1 className="text-2xl font-black text-white flex items-center gap-2">
-                <SettingsIcon className="text-violet-400" size={22} />
-                Settings
-              </h1>
-              <p className="text-slate-500 text-sm mt-1">Customize your FitAI experience</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-black text-white flex items-center gap-2">
+                    <SettingsIcon className="text-violet-400" size={22} />
+                    Settings
+                  </h1>
+                  <p className="text-slate-500 text-sm mt-1">Customize your FitAI experience</p>
+                </div>
+                {saving && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center gap-1.5 text-violet-400 text-xs font-semibold"
+                  >
+                    <Save size={13} className="animate-pulse" />
+                    Saving…
+                  </motion.div>
+                )}
+              </div>
             </motion.div>
 
-            {/* Appearance */}
-            <SettingSection title="Appearance">
+            {/* ── Appearance ── */}
+            <SettingSection title="Appearance" delay={0.05}>
               <SettingRow
                 icon={isDark ? Moon : Sun}
                 title="Dark Mode"
@@ -172,62 +255,102 @@ export default function Settings() {
               </SettingRow>
             </SettingSection>
 
-            {/* Notifications */}
-            <SettingSection title="Notifications">
-              <SettingRow icon={Bell} title="Push Notifications" desc="Receive workout reminders" iconColor="cyan">
+            {/* ── Notifications ── */}
+            <SettingSection title="Notifications" delay={0.1}>
+              <SettingRow
+                icon={Bell}
+                title="Push Notifications"
+                desc="Receive workout reminders"
+                iconColor="cyan"
+              >
                 <Toggle
                   checked={notifications.push}
-                  onChange={(v) => setNotifications((p) => ({ ...p, push: v }))}
+                  onChange={(v) => handleNotifChange('push', v)}
                 />
               </SettingRow>
-              <SettingRow icon={Bell} title="Email Updates" desc="Weekly progress reports via email" iconColor="cyan">
+              <SettingRow
+                icon={Bell}
+                title="Email Updates"
+                desc="Weekly progress reports via email"
+                iconColor="cyan"
+              >
                 <Toggle
                   checked={notifications.email}
-                  onChange={(v) => setNotifications((p) => ({ ...p, email: v }))}
+                  onChange={(v) => handleNotifChange('email', v)}
                 />
               </SettingRow>
-              <SettingRow icon={Bell} title="Workout Reminders" desc="Daily workout time reminders" iconColor="cyan">
+              <SettingRow
+                icon={Bell}
+                title="Workout Reminders"
+                desc="Daily workout time reminders"
+                iconColor="cyan"
+              >
                 <Toggle
                   checked={notifications.workoutReminder}
-                  onChange={(v) => setNotifications((p) => ({ ...p, workoutReminder: v }))}
+                  onChange={(v) => handleNotifChange('workoutReminder', v)}
                 />
               </SettingRow>
-              <SettingRow icon={Bell} title="Achievement Alerts" desc="Get notified when you earn badges" iconColor="cyan">
+              <SettingRow
+                icon={Bell}
+                title="Achievement Alerts"
+                desc="Get notified when you earn badges"
+                iconColor="cyan"
+              >
                 <Toggle
                   checked={notifications.achievements}
-                  onChange={(v) => setNotifications((p) => ({ ...p, achievements: v }))}
+                  onChange={(v) => handleNotifChange('achievements', v)}
                 />
               </SettingRow>
             </SettingSection>
 
-            {/* Privacy */}
-            <SettingSection title="Privacy">
-              <SettingRow icon={Shield} title="Public Profile" desc="Let others discover your profile" iconColor="blue">
+            {/* ── Privacy ── */}
+            <SettingSection title="Privacy" delay={0.15}>
+              <SettingRow
+                icon={Shield}
+                title="Public Profile"
+                desc="Let others discover your profile"
+                iconColor="blue"
+              >
                 <Toggle
                   checked={privacy.publicProfile}
-                  onChange={(v) => setPrivacy((p) => ({ ...p, publicProfile: v }))}
+                  onChange={(v) => handlePrivacyChange('publicProfile', v)}
                 />
               </SettingRow>
-              <SettingRow icon={Shield} title="Share Workouts" desc="Allow friends to see your workouts" iconColor="blue">
+              <SettingRow
+                icon={Shield}
+                title="Share Workouts"
+                desc="Allow friends to see your workouts"
+                iconColor="blue"
+              >
                 <Toggle
                   checked={privacy.shareWorkouts}
-                  onChange={(v) => setPrivacy((p) => ({ ...p, shareWorkouts: v }))}
+                  onChange={(v) => handlePrivacyChange('shareWorkouts', v)}
                 />
               </SettingRow>
-              <SettingRow icon={Check} title="Analytics Opt-In" desc="Help improve FitAI with usage data" iconColor="blue">
+              <SettingRow
+                icon={Check}
+                title="Analytics Opt-In"
+                desc="Help improve FitAI with usage data"
+                iconColor="blue"
+              >
                 <Toggle
                   checked={privacy.analyticsOpt}
-                  onChange={(v) => setPrivacy((p) => ({ ...p, analyticsOpt: v }))}
+                  onChange={(v) => handlePrivacyChange('analyticsOpt', v)}
                 />
               </SettingRow>
             </SettingSection>
 
-            {/* Account */}
-            <SettingSection title="Account">
-              <SettingRow icon={Lock} title="Change Password" desc="Update your account password" iconColor="orange">
+            {/* ── Account ── */}
+            <SettingSection title="Account" delay={0.2}>
+              <SettingRow
+                icon={Lock}
+                title="Change Password"
+                desc="Update your account password"
+                iconColor="orange"
+              >
                 <button
                   onClick={() => setIsPasswordModalOpen(true)}
-                  className="text-slate-500 hover:text-white transition-colors"
+                  className="text-slate-500 hover:text-white transition-colors cursor-pointer"
                 >
                   <ChevronRight size={16} />
                 </button>
@@ -239,11 +362,11 @@ export default function Settings() {
               </SettingRow>
             </SettingSection>
 
-            {/* Danger Zone */}
+            {/* ── Danger Zone ── */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.25 }}
               className="glass rounded-2xl p-5 border border-red-500/15"
             >
               <h3 className="text-xs font-bold text-red-500/70 uppercase tracking-wider mb-3">Danger Zone</h3>
@@ -266,6 +389,7 @@ export default function Settings() {
           </div>
         </main>
 
+        {/* Change Password Modal */}
         <Modal
           isOpen={isPasswordModalOpen}
           onClose={() => {
@@ -286,7 +410,7 @@ export default function Settings() {
             <Input
               label="New Password"
               type="password"
-              placeholder="Enter new password"
+              placeholder="Enter new password (min 6 chars)"
               value={passwords.newPassword}
               onChange={(e) => setPasswords(p => ({ ...p, newPassword: e.target.value }))}
               required
@@ -306,14 +430,14 @@ export default function Settings() {
                   setIsPasswordModalOpen(false);
                   setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
                 }}
-                disabled={loading}
+                disabled={pwLoading}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 variant="primary"
-                loading={loading}
+                loading={pwLoading}
               >
                 Save Password
               </Button>
