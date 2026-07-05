@@ -48,7 +48,7 @@ export default function FeedbackWidget() {
   return (
     <>
       {/* Floating Feedback Action Button */}
-      <div className={`fixed ${activeSession ? 'bottom-24' : 'bottom-6'} right-6 z-40 font-sans transition-all duration-300`}>
+      <div className={`fixed ${activeSession ? 'bottom-36 md:bottom-24' : 'bottom-20 md:bottom-6'} right-6 z-40 font-sans transition-all duration-300`}>
         <motion.button
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.9 }}

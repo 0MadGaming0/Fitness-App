@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Mail, Scale, Ruler, Calendar, Target,
-  Check, Edit2, Save, Camera, Upload, X, Image,
+  Check, Edit2, Save, Camera, Upload, X, Image, Settings, LogOut,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../hooks/useProfile';
@@ -338,7 +338,7 @@ function AvatarModal({ currentAvatar, initials, onSave, onClose }) {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function Profile() {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, logoutUser } = useAuth();
   const { saveProfile } = useProfile();
   const navigate = useNavigate();
 
@@ -497,6 +497,52 @@ export default function Profile() {
                         <p className="text-[10px] text-slate-600 mt-0.5">{s.label}</p>
                       </div>
                     ))}
+                  </div>
+
+                  {/* ── Mobile-only quick actions: Settings + Logout ── */}
+                  <div className="md:hidden w-full mt-4 pt-4 border-t border-white/06 flex flex-col gap-2">
+                    {/* Settings */}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => navigate('/settings')}
+                      style={{
+                        width: '100%', padding: '10px 0',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        background: 'rgba(255,255,255,0.04)',
+                        color: '#94a3b8',
+                        fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      <Settings size={14} />
+                      Settings
+                    </motion.button>
+
+                    {/* Logout */}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        logoutUser();
+                        navigate('/login');
+                      }}
+                      style={{
+                        width: '100%', padding: '10px 0',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(239,68,68,0.25)',
+                        background: 'rgba(239,68,68,0.07)',
+                        color: '#f87171',
+                        fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      <LogOut size={14} />
+                      Logout
+                    </motion.button>
                   </div>
                 </motion.div>
 
