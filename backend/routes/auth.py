@@ -972,12 +972,13 @@ def seed_exercises():
                 "Squeeze your shoulder blades together",
                 "Keep your core engaged"
             ],
-            "alternatives": ["Push-ups", "Dumbbell Press", "Chest Press Machine"],
+            "alternatives": ["Push-up", "Dumbbell Chest Press", "Cable Chest Fly"],
             "videoUrl": "https://www.youtube.com/embed/rT7DgCr-3pg",
             "thumbnailUrl": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop",
             "caloriesEstimate": 220,
             "recommendedSets": 4,
-            "recommendedReps": 10
+            "recommendedReps": 10,
+            "dataVersion": 2
         },
         {
             "name": "Squat",
@@ -1004,7 +1005,7 @@ def seed_exercises():
                 "Squeeze your glutes at the top of the movement"
             ],
             "alternatives": ["Leg Press", "Bulgarian Split Squats", "Goblet Squat"],
-            "videoUrl": "https://www.youtube.com/embed/U3Hl584M8GP",
+            "videoUrl": "https://www.youtube.com/embed/ultWZbUMPL8",
             "thumbnailUrl": "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&auto=format&fit=crop",
             "caloriesEstimate": 280,
             "recommendedSets": 3,
@@ -1035,7 +1036,7 @@ def seed_exercises():
                 "Engage your lats to keep the bar close"
             ],
             "alternatives": ["Romanian Deadlift", "Trap Bar Deadlift", "Kettlebell Swing"],
-            "videoUrl": "https://www.youtube.com/embed/op9kVnS54kc",
+            "videoUrl": "https://www.youtube.com/embed/XxWcirHIwVo",
             "thumbnailUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop",
             "caloriesEstimate": 300,
             "recommendedSets": 3,
@@ -1241,7 +1242,7 @@ def seed_exercises():
             ],
             "alternatives": ["Deadlift", "Good Morning", "Nordic Curl"],
             "videoUrl": "https://www.youtube.com/embed/JCXUYuzwNrM",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1598132346108-1f62ee81a274?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=600&auto=format&fit=crop",
             "caloriesEstimate": 260,
             "recommendedSets": 3,
             "recommendedReps": 10
@@ -1685,7 +1686,7 @@ def seed_exercises():
                 "Breathe deeply throughout the hold"
             ],
             "alternatives": ["Pigeon Pose", "Couch Stretch", "Yoga Sun Salutation"],
-            "videoUrl": "https://www.youtube.com/embed/YqF8GHm5RpI",
+            "videoUrl": "https://www.youtube.com/embed/KRaGanFqUQ4",
             "thumbnailUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop",
             "caloriesEstimate": 60,
             "recommendedSets": 2,
