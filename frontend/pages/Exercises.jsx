@@ -27,7 +27,7 @@ export default function Exercises() {
         const res = await getExercises();
         const needsReseed =
           res.data.length < 20 ||
-          !res.data.some((e) => e.dataVersion === 8);
+          !res.data.some((e) => e.dataVersion === 9);
         if (needsReseed) {
           // Drop duplicates + insert 24-exercise library with fixed video URLs
           await seedExercises();
