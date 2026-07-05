@@ -19,14 +19,14 @@ export default function Exercises() {
   const [difficulty, setDifficulty] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Load and auto-seed if empty
+  // Load and auto-seed if empty or stale (< 20 exercises means old/duplicate data)
   useEffect(() => {
     const loadExercises = async () => {
       try {
         setLoading(true);
         const res = await getExercises();
-        if (res.data.length === 0) {
-          // Trigger auto-seeding if empty
+        if (res.data.length < 20) {
+          // Trigger reseed: drops old duplicates and inserts full 24-exercise library
           await seedExercises();
           const reFetched = await getExercises();
           setExercises(reFetched.data);
@@ -42,6 +42,7 @@ export default function Exercises() {
     };
     loadExercises();
   }, []);
+
 
   // Filter local logic for instant search feeling
   const filtered = exercises.filter((ex) => {
