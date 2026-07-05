@@ -978,7 +978,7 @@ def seed_exercises():
             "caloriesEstimate": 220,
             "recommendedSets": 4,
             "recommendedReps": 10,
-            "dataVersion": 3
+            "dataVersion": 4
         },
         {
             "name": "Squat",
@@ -1242,7 +1242,7 @@ def seed_exercises():
             ],
             "alternatives": ["Deadlift", "Good Morning", "Nordic Curl"],
             "videoUrl": "https://www.youtube.com/embed/JCXUYuzwNrM",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop",
             "caloriesEstimate": 260,
             "recommendedSets": 3,
             "recommendedReps": 10
@@ -1686,7 +1686,7 @@ def seed_exercises():
                 "Breathe deeply throughout the hold"
             ],
             "alternatives": ["Pigeon Pose", "Couch Stretch", "Yoga Sun Salutation"],
-            "videoUrl": "https://www.youtube.com/embed/0Qr57fLXGgU",
+            "videoUrl": "https://www.youtube.com/embed/YwV6063t9bE",
             "thumbnailUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop",
             "caloriesEstimate": 60,
             "recommendedSets": 2,
