@@ -29,7 +29,7 @@ export default function MobileNav() {
             className={({ isActive }) => `
               flex flex-col items-center gap-1 px-4 py-2 rounded-xl
               transition-all duration-200 min-w-[56px]
-              ${isActive ? 'text-violet-400' : 'text-slate-500'}
+              ${isActive ? 'text-violet-400' : 'text-slate-300'}
             `}
           >
             {({ isActive }) => (
@@ -41,12 +41,12 @@ export default function MobileNav() {
                   {isActive && (
                     <motion.div
                       layoutId="mobile-nav-pill"
-                      className="absolute inset-0 bg-violet-600/15 rounded-xl -z-10"
+                      className="absolute inset-0 bg-violet-600/25 rounded-xl -z-10"
                     />
                   )}
-                  <item.icon size={20} />
+                  <item.icon size={22} strokeWidth={isActive ? 2.2 : 1.8} />
                 </motion.div>
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
               </>
             )}
           </NavLink>
