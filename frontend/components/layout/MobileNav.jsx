@@ -19,11 +19,11 @@ export default function MobileNav() {
     <nav
       className="md:hidden fixed bottom-0 inset-x-0 z-40 px-2 pb-safe"
       style={{
-        background: 'linear-gradient(180deg, rgba(13,13,22,0.92) 0%, rgba(9,9,18,0.98) 100%)',
+        background: 'linear-gradient(180deg, rgba(26,22,46,0.97) 0%, rgba(18,15,36,0.99) 100%)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderTop: '1px solid rgba(139,92,246,0.25)',
-        boxShadow: '0 -4px 32px rgba(0,0,0,0.6), 0 -1px 0 rgba(139,92,246,0.15)',
+        borderTop: '1.5px solid rgba(139,92,246,0.5)',
+        boxShadow: '0 -4px 40px rgba(0,0,0,0.7), 0 -1px 0 rgba(139,92,246,0.3)',
       }}
     >
       <div className="flex items-center justify-around py-2">
@@ -34,7 +34,7 @@ export default function MobileNav() {
             className={({ isActive }) => `
               relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl
               transition-all duration-200 min-w-[52px]
-              ${isActive ? 'text-violet-400' : 'text-slate-400'}
+              ${isActive ? 'text-violet-400' : 'text-slate-200'}
             `}
           >
             {({ isActive }) => (
