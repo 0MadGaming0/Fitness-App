@@ -62,12 +62,14 @@ export default function ActiveWorkoutWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             onClick={() => setExpanded(true)}
-            className="
-              glass-strong p-4 rounded-2xl border border-violet-500/30
-              shadow-[0_8px_32px_rgba(124,58,237,0.25)]
-              flex items-center justify-between cursor-pointer hover:border-violet-500/50
-              transition-all duration-300
-            "
+            className="p-4 rounded-2xl flex items-center justify-between cursor-pointer transition-all duration-300"
+            style={{
+              background: 'linear-gradient(135deg, rgba(26,22,46,0.97) 0%, rgba(18,15,36,0.99) 100%)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              border: '1.5px solid rgba(139,92,246,0.5)',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(139,92,246,0.15), 0 4px 20px rgba(124,58,237,0.3)',
+            }}
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 animate-pulse">
@@ -113,10 +115,14 @@ export default function ActiveWorkoutWidget() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
-            className="
-              glass-strong p-5 rounded-3xl border border-white/10
-              shadow-[0_24px_48px_rgba(0,0,0,0.5)] flex flex-col gap-4
-            "
+            className="p-5 rounded-3xl flex flex-col gap-4"
+            style={{
+              background: 'linear-gradient(135deg, rgba(26,22,46,0.97) 0%, rgba(18,15,36,0.99) 100%)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              border: '1.5px solid rgba(139,92,246,0.5)',
+              boxShadow: '0 24px 60px rgba(0,0,0,0.75), 0 0 0 1px rgba(139,92,246,0.15), 0 4px 24px rgba(124,58,237,0.3)',
+            }}
           >
             {/* Header */}
             <div className="flex items-center justify-between pb-2 border-b border-white/06">
