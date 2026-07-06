@@ -15,10 +15,11 @@ const formatTime = (secs) => {
   return `${m}:${s}`;
 };
 
-export default function ActiveWorkoutWidget() {
   const {
     activeSession,
     secondsElapsed,
+    isPaused,
+    setIsPaused,
     restTimeLeft,
     restTimeTotal,
     restActive,
@@ -80,8 +81,10 @@ export default function ActiveWorkoutWidget() {
                   {activeSession.exercise}
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
-                  <Clock size={11} className="text-slate-500" />
-                  {formatTime(secondsElapsed)}
+                  <Clock size={11} className={isPaused ? "text-amber-400 animate-pulse" : "text-slate-500"} />
+                  <span className={isPaused ? "text-amber-400 font-bold" : ""}>
+                    {formatTime(secondsElapsed)} {isPaused && '(Paused)'}
+                  </span>
                   <span className="text-violet-400">•</span>
                   <span>{completedSetsCount}/{totalSets} Sets</span>
                 </p>
@@ -158,9 +161,26 @@ export default function ActiveWorkoutWidget() {
                   Estimated: {intCaloriesEstimate(completedSetsCount, secondsElapsed)} kcal
                 </p>
               </div>
-              <div className="flex items-center gap-1 text-sm font-mono font-bold text-white bg-white/05 px-2.5 py-1.5 rounded-xl border border-white/06">
-                <Clock size={13} className="text-slate-400" />
-                {formatTime(secondsElapsed)}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setIsPaused(!isPaused)}
+                  className={`p-1.5 rounded-lg border transition-all duration-300 flex items-center justify-center cursor-pointer ${
+                    isPaused
+                      ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30'
+                      : 'bg-white/05 border-white/08 text-slate-350 hover:bg-white/10 hover:text-white'
+                  }`}
+                  title={isPaused ? 'Resume Timer' : 'Pause Timer'}
+                >
+                  {isPaused ? <Play size={13} /> : <Pause size={13} />}
+                </button>
+                <div className={`flex items-center gap-1.5 text-sm font-mono font-bold px-2.5 py-1.5 rounded-xl border transition-colors duration-300 ${
+                  isPaused 
+                    ? 'text-amber-400 bg-amber-500/10 border-amber-500/20 animate-pulse' 
+                    : 'text-white bg-white/05 border-white/06'
+                }`}>
+                  <Clock size={13} className={isPaused ? 'text-amber-400' : 'text-slate-400'} />
+                  {formatTime(secondsElapsed)}
+                </div>
               </div>
             </div>
 

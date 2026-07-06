@@ -43,6 +43,10 @@ export function ActiveWorkoutProvider({ children }) {
   const timerRef = useRef(null);
   const restTimerRef = useRef(null);
 
+  const [isPaused, setIsPaused] = useState(() => {
+    return localStorage.getItem('fitai_active_paused') === 'true';
+  });
+
   // Sync activeSession to localStorage
   useEffect(() => {
     if (activeSession) {
@@ -50,9 +54,16 @@ export function ActiveWorkoutProvider({ children }) {
     } else {
       localStorage.removeItem('fitai_active_session');
       localStorage.removeItem('fitai_active_secs');
+      localStorage.removeItem('fitai_active_paused');
       setSecondsElapsed(0);
+      setIsPaused(false);
     }
   }, [activeSession]);
+
+  // Sync isPaused to localStorage
+  useEffect(() => {
+    localStorage.setItem('fitai_active_paused', isPaused.toString());
+  }, [isPaused]);
 
   // Sync seconds elapsed to localStorage periodically
   useEffect(() => {
@@ -63,7 +74,7 @@ export function ActiveWorkoutProvider({ children }) {
 
   // Active workout timer tick
   useEffect(() => {
-    if (activeSession && activeSession.status === 'in_progress') {
+    if (activeSession && activeSession.status === 'in_progress' && !isPaused) {
       timerRef.current = setInterval(() => {
         setSecondsElapsed((prev) => prev + 1);
       }, 1000);
@@ -74,7 +85,7 @@ export function ActiveWorkoutProvider({ children }) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [activeSession]);
+  }, [activeSession, isPaused]);
 
   // Rest timer tick (Feature 4)
   useEffect(() => {
@@ -132,6 +143,7 @@ export function ActiveWorkoutProvider({ children }) {
       const res = await startSession({ exercise, sets, reps, weight });
       setActiveSession(res.data);
       setSecondsElapsed(0);
+      setIsPaused(false);
       toast.success(`Workout session started: ${exercise}! 💪`);
       return true;
     } catch (err) {
@@ -247,6 +259,8 @@ export function ActiveWorkoutProvider({ children }) {
       value={{
         activeSession,
         secondsElapsed,
+        isPaused,
+        setIsPaused,
         restTimeLeft,
         restTimeTotal,
         restActive,
