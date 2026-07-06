@@ -52,7 +52,7 @@ export default function ActiveWorkoutWidget() {
   const restPct = restTimeTotal > 0 ? Math.round((restTimeLeft / restTimeTotal) * 100) : 0;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 max-w-sm w-full font-sans">
+    <div className="fixed bottom-[88px] md:bottom-6 right-3 md:right-6 z-50 w-[calc(100%-24px)] md:max-w-sm md:w-full font-sans">
       <AnimatePresence mode="wait">
         {!expanded ? (
           /* ─── COLLAPSED MINIFIED FLOATING WIDGET ─── */
