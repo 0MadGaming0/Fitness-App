@@ -76,8 +76,8 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onStart, index 
           <button
             onClick={() => setMenuOpen((v) => !v)}
             className="
-              p-1.5 rounded-lg text-slate-500 hover:text-white
-              hover:bg-white/10 transition-all opacity-0 group-hover:opacity-100
+              p-1.5 rounded-lg text-slate-400 hover:text-white
+              hover:bg-white/10 transition-all
             "
           >
             <MoreVertical size={16} />
