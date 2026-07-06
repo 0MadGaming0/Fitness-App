@@ -15,6 +15,7 @@ const formatTime = (secs) => {
   return `${m}:${s}`;
 };
 
+export default function ActiveWorkoutWidget() {
   const {
     activeSession,
     secondsElapsed,
