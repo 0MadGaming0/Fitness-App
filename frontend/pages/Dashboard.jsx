@@ -185,7 +185,15 @@ export default function Dashboard() {
                     </motion.div>
                   </div>
 
-                  {/* Bold Neon Daily Quote — hidden on mobile */}
+                  {/* Bold Neon Daily Quote — compact strip on mobile, full block on desktop */}
+                  {/* Mobile version */}
+                  <div className="md:hidden mt-1.5 mb-2 px-2.5 py-1.5 bg-gradient-to-r from-violet-950/20 to-cyan-950/10 border border-violet-500/20 rounded-lg flex items-center gap-1.5 overflow-hidden">
+                    <span className="text-fuchsia-400 text-[10px] flex-shrink-0">✦</span>
+                    <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 font-bold italic text-[10px] truncate">
+                      "{quote.text}" — {quote.author}
+                    </p>
+                  </div>
+                  {/* Desktop version */}
                   <div className="hidden md:block mt-2.5 mb-4 p-4 bg-gradient-to-r from-violet-950/20 via-slate-900/10 to-cyan-950/10 border border-violet-500/20 rounded-2xl shadow-[0_0_20px_rgba(124,58,237,0.15)] max-w-xl">
                     <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 font-extrabold italic text-base leading-relaxed drop-shadow-[0_0_8px_rgba(167,139,250,0.45)]">
                       "{quote.text}"
