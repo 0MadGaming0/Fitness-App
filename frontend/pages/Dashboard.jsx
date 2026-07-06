@@ -154,34 +154,52 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative glass rounded-3xl overflow-hidden"
-              style={{ padding: 'clamp(16px, 4vw, 32px) clamp(16px, 5vw, 40px)' }}
+              className="relative glass rounded-2xl md:rounded-3xl overflow-hidden"
+              style={{ padding: 'clamp(12px, 3vw, 32px) clamp(12px, 4vw, 40px)' }}
             >
               <div className="blob animate-blob w-72 h-72 bg-violet-800 -top-20 -right-20 absolute opacity-15" />
               <div className="blob animate-blob w-48 h-48 bg-cyan-800 bottom-0 right-1/3 absolute opacity-10" />
 
-              <div className="relative flex flex-col md:flex-row md:items-center justify-between" style={{ gap: '16px' }}>
+              <div className="relative flex flex-col md:flex-row md:items-center justify-between" style={{ gap: '12px' }}>
                 <div className="flex-1 min-w-0">
-                  <p className="text-slate-400 text-xs md:text-sm mb-0.5">{greeting} 👋</p>
-                  <h1 className="text-2xl md:text-4xl font-black text-white mb-2">
-                    {user?.name?.split(' ')[0] || 'Athlete'}!
-                  </h1>
 
-                  {/* Bold Neon Daily Quote */}
-                  <div className="mb-3 p-2.5 md:p-4 bg-gradient-to-r from-violet-950/20 via-slate-900/10 to-cyan-950/10 border border-violet-500/20 rounded-xl md:rounded-2xl shadow-[0_0_20px_rgba(124,58,237,0.15)] max-w-xl">
-                    <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 font-extrabold italic text-xs md:text-base leading-relaxed drop-shadow-[0_0_8px_rgba(167,139,250,0.45)]">
-                      "{quote.text}"
-                    </p>
-                    <p className="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">— {quote.author}</p>
+                  {/* Mobile: greeting + streak side-by-side */}
+                  <div className="flex items-center justify-between md:block">
+                    <div>
+                      <p className="text-slate-400 text-xs md:text-sm mb-0.5">{greeting} 👋</p>
+                      <h1 className="text-xl md:text-4xl font-black text-white mb-0 md:mb-2">
+                        {user?.name?.split(' ')[0] || 'Athlete'}!
+                      </h1>
+                    </div>
+                    {/* Streak badge — inline on mobile, hidden here on desktop */}
+                    <motion.div
+                      animate={{ scale: [1, 1.03, 1] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="flex md:hidden items-center gap-1.5 glass-strong rounded-xl px-2.5 py-1.5 border border-orange-500/20"
+                    >
+                      <span className="text-lg">🔥</span>
+                      <div>
+                        <p className="text-base font-black text-white leading-none">{currentStreak}</p>
+                        <p className="text-[9px] text-slate-400">Streak</p>
+                      </div>
+                    </motion.div>
                   </div>
 
-                  {/* XP Bar (Feature 7) */}
-                  <div className="max-w-md font-sans">
+                  {/* Bold Neon Daily Quote — hidden on mobile */}
+                  <div className="hidden md:block mt-2.5 mb-4 p-4 bg-gradient-to-r from-violet-950/20 via-slate-900/10 to-cyan-950/10 border border-violet-500/20 rounded-2xl shadow-[0_0_20px_rgba(124,58,237,0.15)] max-w-xl">
+                    <p className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 font-extrabold italic text-base leading-relaxed drop-shadow-[0_0_8px_rgba(167,139,250,0.45)]">
+                      "{quote.text}"
+                    </p>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1.5">— {quote.author}</p>
+                  </div>
+
+                  {/* XP Bar */}
+                  <div className="max-w-md mt-2 md:mt-4 font-sans">
                     <div className="flex justify-between text-[10px] md:text-xs mb-1 font-bold px-0.5">
                       <span className="text-violet-400 drop-shadow-[0_0_8px_rgba(167,139,250,0.4)]">Level {level}</span>
                       <span className="text-slate-400">{xpInCurrentLevel}/500 XP to Level {level + 1}</span>
                     </div>
-                    <div className="w-full h-2.5 md:h-3.5 bg-white/05 border border-white/08 rounded-full overflow-hidden p-[2px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                    <div className="w-full h-2 md:h-3.5 bg-white/05 border border-white/08 rounded-full overflow-hidden p-[2px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
                       <div
                         className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(236,72,153,0.4)]"
                         style={{ width: `${xpProgressPct}%` }}
@@ -190,16 +208,16 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Streak badge */}
+                {/* Streak badge — desktop only */}
                 <motion.div
                   animate={{ scale: [1, 1.03, 1] }}
                   transition={{ duration: 3, repeat: Infinity }}
-                  className="flex items-center gap-2 md:gap-3 glass-strong rounded-xl md:rounded-2xl px-3 md:px-5 py-2.5 md:py-4 border border-orange-500/20 self-start md:self-auto"
+                  className="hidden md:flex items-center gap-3 glass-strong rounded-2xl px-5 py-4 border border-orange-500/20"
                 >
-                  <div className="text-2xl md:text-3xl">🔥</div>
+                  <div className="text-3xl">🔥</div>
                   <div>
-                    <p className="text-xl md:text-2xl font-black text-white">{currentStreak}</p>
-                    <p className="text-[10px] md:text-xs text-slate-400 font-medium">Current Streak</p>
+                    <p className="text-2xl font-black text-white">{currentStreak}</p>
+                    <p className="text-xs text-slate-400 font-medium">Current Streak</p>
                   </div>
                 </motion.div>
               </div>
