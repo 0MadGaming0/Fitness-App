@@ -978,7 +978,7 @@ def seed_exercises():
             "caloriesEstimate": 220,
             "recommendedSets": 4,
             "recommendedReps": 10,
-            "dataVersion": 10
+            "dataVersion": 11
         },
         {
             "name": "Squat",
@@ -1091,7 +1091,7 @@ def seed_exercises():
             ],
             "alternatives": ["Side Plank", "Hollow Body Hold", "Dead Bug"],
             "videoUrl": "https://www.youtube.com/embed/pSHjTRCQxIw",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/plank.png",
             "caloriesEstimate": 120,
             "recommendedSets": 3,
             "recommendedReps": 60
@@ -1121,7 +1121,7 @@ def seed_exercises():
             ],
             "alternatives": ["Lat Pulldown", "Assisted Pull-up", "Inverted Row"],
             "videoUrl": "https://www.youtube.com/embed/eGo4IYlbE5g",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1598266663439-2056e6900339?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/pull-up.png",
             "caloriesEstimate": 200,
             "recommendedSets": 3,
             "recommendedReps": 8
@@ -1271,7 +1271,7 @@ def seed_exercises():
             ],
             "alternatives": ["Pull-up", "Cable Row", "Dumbbell Row"],
             "videoUrl": "https://www.youtube.com/embed/CAwf7n6Luuc",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1517344368193-41552b6ad3f5?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/lat-pulldown.png",
             "caloriesEstimate": 190,
             "recommendedSets": 3,
             "recommendedReps": 12
@@ -1359,7 +1359,7 @@ def seed_exercises():
             ],
             "alternatives": ["Barbell Curl", "Hammer Curl", "Cable Curl"],
             "videoUrl": "https://www.youtube.com/embed/ykJmrZ5v0Oo",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/bicep-curl.png",
             "caloriesEstimate": 140,
             "recommendedSets": 3,
             "recommendedReps": 12
@@ -1389,7 +1389,7 @@ def seed_exercises():
             ],
             "alternatives": ["Bench Dip", "Cable Pushdown", "Close-Grip Bench Press"],
             "videoUrl": "https://www.youtube.com/embed/wjUmnZH528Y",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1598632640487-6ea4a4e8b963?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/tricep-dip.png",
             "caloriesEstimate": 175,
             "recommendedSets": 3,
             "recommendedReps": 12
@@ -1419,7 +1419,7 @@ def seed_exercises():
             ],
             "alternatives": ["Bulgarian Split Squat", "Step-up", "Squat"],
             "videoUrl": "https://www.youtube.com/embed/QOVaHwm-Q6U",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/lunges.png",
             "caloriesEstimate": 230,
             "recommendedSets": 3,
             "recommendedReps": 12
@@ -1449,7 +1449,7 @@ def seed_exercises():
             ],
             "alternatives": ["Dumbbell Fly", "Pec Deck", "Bench Press"],
             "videoUrl": "https://www.youtube.com/embed/Iwe6AmxVf7o",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1616803689943-5601631c7fec?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/cable-chest-fly.png",
             "caloriesEstimate": 180,
             "recommendedSets": 3,
             "recommendedReps": 15
@@ -1479,7 +1479,7 @@ def seed_exercises():
             ],
             "alternatives": ["Mountain Climber", "Jumping Jacks", "Box Jump"],
             "videoUrl": "https://www.youtube.com/embed/dZgVxmf6jkA",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/burpee.png",
             "caloriesEstimate": 350,
             "recommendedSets": 3,
             "recommendedReps": 10
@@ -1508,7 +1508,7 @@ def seed_exercises():
             ],
             "alternatives": ["Plank", "Burpee", "High Knees"],
             "videoUrl": "https://www.youtube.com/embed/nmwgirgXLYM",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1540206395-68808572332f?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/mountain-climber.png",
             "caloriesEstimate": 300,
             "recommendedSets": 3,
             "recommendedReps": 30
@@ -1538,7 +1538,7 @@ def seed_exercises():
             ],
             "alternatives": ["Glute Bridge", "Cable Kickback", "Romanian Deadlift"],
             "videoUrl": "https://www.youtube.com/embed/SEdqd1n0cvg",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/hip-thrust.png",
             "caloriesEstimate": 210,
             "recommendedSets": 4,
             "recommendedReps": 12
@@ -1567,7 +1567,7 @@ def seed_exercises():
             ],
             "alternatives": ["Plank", "Dead Bug", "Russian Twist"],
             "videoUrl": "https://www.youtube.com/embed/_rdfjFSFKMY",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/side-plank.png",
             "caloriesEstimate": 100,
             "recommendedSets": 3,
             "recommendedReps": 30
@@ -1596,7 +1596,7 @@ def seed_exercises():
             ],
             "alternatives": ["Side Plank", "Bicycle Crunch", "Cable Wood Chop"],
             "videoUrl": "https://www.youtube.com/embed/wkD8rjkodUI",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1571019613576-2b22c76fd955?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/russian-twist.png",
             "caloriesEstimate": 130,
             "recommendedSets": 3,
             "recommendedReps": 20
@@ -1626,7 +1626,7 @@ def seed_exercises():
             ],
             "alternatives": ["Squat Jump", "Step-up", "Burpee"],
             "videoUrl": "https://www.youtube.com/embed/NBY9-kTuHEk",
-            "thumbnailUrl": "https://images.unsplash.com/photo-1520877880798-5ee004e3f11e?w=600&auto=format&fit=crop",
+            "thumbnailUrl": "/exercises/box-jump.png",
             "caloriesEstimate": 320,
             "recommendedSets": 4,
             "recommendedReps": 8
