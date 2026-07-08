@@ -287,10 +287,14 @@ def get_workouts():
 
     workout_list = list(
         workouts.find(
-            {"email": request.user_email},
-            {"_id": 0}
+            {"email": request.user_email}
         )
     )
+
+    # Convert ObjectId to string for JSON serialization
+    for w in workout_list:
+        w["id"] = str(w["_id"])
+        del w["_id"]
 
     return jsonify(workout_list), 200
 
