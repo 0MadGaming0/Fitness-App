@@ -328,6 +328,13 @@ def delete_workout(workout_id):
 @token_required
 def update_workout(workout_id):
 
+    try:
+        object_id = ObjectId(workout_id)
+    except Exception:
+        return jsonify({
+            "message": "Invalid Workout ID"
+        }), 400
+
     data = request.json
 
     update_data = {
@@ -338,7 +345,7 @@ def update_workout(workout_id):
 
     result = workouts.update_one(
         {
-            "_id": ObjectId(workout_id),
+            "_id": object_id,
             "email": request.user_email
         },
         {

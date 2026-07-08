@@ -59,7 +59,7 @@ export function useWorkouts() {
     try {
       await deleteWorkout(id);
       toast.success('Workout deleted');
-      setWorkouts((prev) => prev.filter((w) => w._id !== id));
+      setWorkouts((prev) => prev.filter((w) => w.id !== id));
       return true;
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to delete workout');

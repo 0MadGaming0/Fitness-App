@@ -72,7 +72,7 @@ export default function Workouts() {
     setSubmitting(true);
     let ok;
     if (editData) {
-      ok = await editWorkout(editData._id, data);
+      ok = await editWorkout(editData.id, data);
     } else {
       ok = await createWorkout(data);
     }
@@ -83,7 +83,7 @@ export default function Workouts() {
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
     setSubmitting(true);
-    await removeWorkout(deleteTarget._id);
+    await removeWorkout(deleteTarget.id);
     setSubmitting(false);
     setDeleteOpen(false);
     setDeleteTarget(null);
@@ -233,7 +233,7 @@ export default function Workouts() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {paginated.map((workout, i) => (
                     <WorkoutCard
-                      key={workout._id || i}
+                      key={workout.id || i}
                       workout={workout}
                       index={i}
                       onEdit={handleEdit}
