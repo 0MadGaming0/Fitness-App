@@ -23,15 +23,20 @@ export default function WorkoutForm({ isOpen, onClose, onSubmit, editData, loadi
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: { exercise: '', sets: '', reps: '' },
+    defaultValues: { exercise: '', sets: '', reps: '', weight: '' },
   });
 
   // Populate form when editing
   useEffect(() => {
     if (editData) {
-      reset({ exercise: editData.exercise, sets: editData.sets, reps: editData.reps });
+      reset({
+        exercise: editData.exercise,
+        sets: editData.sets,
+        reps: editData.reps,
+        weight: editData.weight !== undefined && editData.weight !== null ? editData.weight : '',
+      });
     } else {
-      reset({ exercise: '', sets: '', reps: '' });
+      reset({ exercise: '', sets: '', reps: '', weight: '' });
     }
   }, [editData, reset]);
 
@@ -40,6 +45,7 @@ export default function WorkoutForm({ isOpen, onClose, onSubmit, editData, loadi
       exercise: data.exercise.trim(),
       sets: parseInt(data.sets, 10),
       reps: parseInt(data.reps, 10),
+      weight: data.weight ? parseFloat(data.weight) : null,
     });
   };
 
@@ -78,8 +84,8 @@ export default function WorkoutForm({ isOpen, onClose, onSubmit, editData, loadi
           </div>
         </div>
 
-        {/* Sets & Reps */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Sets, Reps & Weight */}
+        <div className="grid grid-cols-3 gap-3">
           <Input
             label="Sets"
             type="number"
@@ -101,6 +107,17 @@ export default function WorkoutForm({ isOpen, onClose, onSubmit, editData, loadi
             {...register('reps', {
               required: 'Required',
               min: { value: 1, message: 'Min 1' },
+              max: { value: 1000, message: 'Max 1000' },
+            })}
+          />
+          <Input
+            label="Weight (kg)"
+            type="number"
+            step="any"
+            placeholder="e.g. 40"
+            error={errors.weight?.message}
+            {...register('weight', {
+              min: { value: 0, message: 'Min 0' },
               max: { value: 1000, message: 'Max 1000' },
             })}
           />

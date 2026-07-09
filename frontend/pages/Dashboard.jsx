@@ -258,11 +258,19 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-black text-white text-base">Next Planned Workout</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">{nextPlanned.exercise} — {nextPlanned.sets} sets × {nextPlanned.reps} reps</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {nextPlanned.exercise} — {nextPlanned.sets} sets × {nextPlanned.reps} reps
+                      {nextPlanned.weight !== undefined && nextPlanned.weight !== null ? ` @ ${nextPlanned.weight} kg` : ''}
+                    </p>
                   </div>
                 </div>
                 <button
-                  onClick={() => startWorkout(nextPlanned.exercise, nextPlanned.sets, nextPlanned.reps, 40)}
+                  onClick={() => startWorkout(
+                    nextPlanned.exercise,
+                    nextPlanned.sets,
+                    nextPlanned.reps,
+                    nextPlanned.weight !== undefined && nextPlanned.weight !== null ? nextPlanned.weight : 40
+                  )}
                   className="
                     px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold
                     shadow-[0_4px_12px_rgba(124,58,237,0.3)] transition-all cursor-pointer border-none

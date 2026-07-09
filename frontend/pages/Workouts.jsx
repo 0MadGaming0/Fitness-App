@@ -238,7 +238,12 @@ export default function Workouts() {
                       index={i}
                       onEdit={handleEdit}
                       onDelete={handleDeleteClick}
-                      onStart={(w) => startWorkout(w.exercise, w.sets, w.reps, w.weight || 40)}
+                      onStart={(w) => startWorkout(
+                        w.exercise,
+                        w.sets,
+                        w.reps,
+                        w.weight !== undefined && w.weight !== null ? w.weight : 40
+                      )}
                     />
                   ))}
                 </div>

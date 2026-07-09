@@ -18,6 +18,9 @@ export const startSession = (data) => api.post('/workout/start', data);
 /** POST /workout/complete-set */
 export const completeSet = (data) => api.post('/workout/complete-set', data);
 
+/** POST /workout/update-session */
+export const updateSession = (data) => api.post('/workout/update-session', data);
+
 /** POST /workout/finish */
 export const finishWorkout = (data) => api.post('/workout/finish', data);
 

@@ -111,7 +111,7 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onStart, index 
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="bg-white/[0.03] rounded-xl p-3 text-center">
           <p className="text-2xl font-bold text-white">{workout.sets}</p>
           <p className="text-xs text-slate-500 mt-0.5">Sets</p>
@@ -119,6 +119,12 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onStart, index 
         <div className="bg-white/[0.03] rounded-xl p-3 text-center">
           <p className="text-2xl font-bold text-white">{workout.reps}</p>
           <p className="text-xs text-slate-500 mt-0.5">Reps</p>
+        </div>
+        <div className="bg-white/[0.03] rounded-xl p-3 text-center">
+          <p className="text-2xl font-bold text-white">
+            {workout.weight !== undefined && workout.weight !== null ? `${workout.weight} kg` : '—'}
+          </p>
+          <p className="text-xs text-slate-500 mt-0.5">Weight</p>
         </div>
       </div>
 

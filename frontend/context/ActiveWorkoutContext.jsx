@@ -4,7 +4,8 @@ import {
   startSession,
   completeSet,
   finishWorkout as finishWorkoutApi,
-  skipWorkout as skipWorkoutApi
+  skipWorkout as skipWorkoutApi,
+  updateSession as updateSessionApi
 } from '../services/workoutService';
 
 const ActiveWorkoutContext = createContext(null);
@@ -254,6 +255,24 @@ export function ActiveWorkoutProvider({ children }) {
     }
   };
 
+  // Update Active Session mid-workout (weight/reps)
+  const updateActiveSession = async (weight, reps) => {
+    if (!activeSession) return;
+    try {
+      const res = await updateSessionApi({
+        session_id: activeSession._id,
+        weight,
+        reps,
+      });
+      setActiveSession(res.data);
+      toast.success('Workout settings updated! 💪');
+      return true;
+    } catch (err) {
+      toast.error('Failed to update workout settings');
+      return false;
+    }
+  };
+
   return (
     <ActiveWorkoutContext.Provider
       value={{
@@ -275,6 +294,7 @@ export function ActiveWorkoutProvider({ children }) {
         skipRest,
         finishActiveWorkout,
         skipActiveWorkout,
+        updateActiveSession,
       }}
     >
       {children}

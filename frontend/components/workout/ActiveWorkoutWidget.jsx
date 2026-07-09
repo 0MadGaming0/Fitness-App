@@ -29,6 +29,7 @@ export default function ActiveWorkoutWidget() {
     finishActiveWorkout,
     skipActiveWorkout,
     cheatingWarning,
+    updateActiveSession,
   } = useActiveWorkout();
 
   const [expanded, setExpanded] = useState(false);
@@ -279,25 +280,39 @@ export default function ActiveWorkoutWidget() {
             </AnimatePresence>
 
             {/* Weight/Reps Override Form */}
-            <div className="grid grid-cols-2 gap-2 pb-1">
-              <div>
-                <label className="text-[10px] text-slate-500 block mb-1">Set Weight (kg)</label>
-                <input
-                  type="number"
-                  value={actualWeight}
-                  onChange={(e) => setActualWeight(e.target.value)}
-                  className="w-full bg-white/03 border border-white/08 rounded-lg px-2 py-1 text-xs text-white outline-none"
-                />
+            <div className="bg-white/[0.01] border border-white/05 rounded-xl p-3 flex flex-col gap-2">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] text-slate-500 block mb-1">Set Weight (kg)</label>
+                  <input
+                    type="number"
+                    value={actualWeight}
+                    onChange={(e) => setActualWeight(e.target.value)}
+                    className="w-full bg-white/03 border border-white/08 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-violet-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-slate-500 block mb-1">Set Reps</label>
+                  <input
+                    type="number"
+                    value={actualReps}
+                    onChange={(e) => setActualReps(e.target.value)}
+                    className="w-full bg-white/03 border border-white/08 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-violet-500/50"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="text-[10px] text-slate-500 block mb-1">Set Reps</label>
-                <input
-                  type="number"
-                  value={actualReps}
-                  onChange={(e) => setActualReps(e.target.value)}
-                  className="w-full bg-white/03 border border-white/08 rounded-lg px-2 py-1 text-xs text-white outline-none"
-                />
-              </div>
+              <button
+                type="button"
+                onClick={() => updateActiveSession(parseFloat(actualWeight) || 0, parseInt(actualReps, 10) || 0)}
+                className="
+                  w-full py-2 rounded-lg text-[10px] font-bold
+                  bg-violet-600/15 hover:bg-violet-600 text-violet-400 hover:text-white
+                  border border-violet-500/20 hover:border-violet-500
+                  transition-all duration-300 cursor-pointer
+                "
+              >
+                Set Weight & Reps
+              </button>
             </div>
 
             {/* Finish/Skip buttons */}

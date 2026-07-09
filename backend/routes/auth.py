@@ -262,11 +262,21 @@ def add_workout():
 
     data = request.json
 
+    weight_val = data.get("weight")
+    if weight_val is not None and weight_val != "":
+        try:
+            weight_val = float(weight_val)
+        except (ValueError, TypeError):
+            weight_val = None
+    else:
+        weight_val = None
+
     workout = {
         "email": request.user_email,
         "exercise": data.get("exercise"),
         "sets": data.get("sets"),
         "reps": data.get("reps"),
+        "weight": weight_val,
         "created_at": datetime.utcnow()
     }
 
@@ -341,10 +351,20 @@ def update_workout(workout_id):
 
     data = request.json
 
+    weight_val = data.get("weight")
+    if weight_val is not None and weight_val != "":
+        try:
+            weight_val = float(weight_val)
+        except (ValueError, TypeError):
+            weight_val = None
+    else:
+        weight_val = None
+
     update_data = {
         "exercise": data.get("exercise"),
         "sets": data.get("sets"),
-        "reps": data.get("reps")
+        "reps": data.get("reps"),
+        "weight": weight_val
     }
 
     result = workouts.update_one(
@@ -549,6 +569,55 @@ def complete_set():
     session["_id"] = str(session["_id"])
     session["completed_sets"] = completed_sets
     session["completion_rate"] = completion_rate
+    if session.get("created_at"):
+        session["created_at"] = session["created_at"].isoformat()
+
+    return jsonify(session), 200
+
+
+# ==========================
+# Update Active Workout Session parameters
+# ==========================
+@auth.route("/workout/update-session", methods=["POST"])
+@token_required
+def update_session():
+    data = request.json
+    session_id = data.get("session_id")
+    weight = data.get("weight")
+    reps = data.get("reps")
+
+    if not session_id:
+        return jsonify({"message": "Session ID is required"}), 400
+
+    session = workout_sessions.find_one({"_id": ObjectId(session_id), "email": request.user_email})
+    if not session:
+        return jsonify({"message": "Session not found"}), 404
+
+    # Sanitize and convert values
+    if weight is not None and weight != "":
+        try:
+            weight = float(weight)
+        except (ValueError, TypeError):
+            weight = 0.0
+    else:
+        weight = 0.0
+
+    if reps is not None and reps != "":
+        try:
+            reps = int(reps)
+        except (ValueError, TypeError):
+            reps = 0
+    else:
+        reps = 0
+
+    workout_sessions.update_one(
+        {"_id": ObjectId(session_id)},
+        {"$set": {"weight": weight, "reps": reps}}
+    )
+
+    # Return updated session
+    session = workout_sessions.find_one({"_id": ObjectId(session_id)})
+    session["_id"] = str(session["_id"])
     if session.get("created_at"):
         session["created_at"] = session["created_at"].isoformat()
 
@@ -774,7 +843,8 @@ def dashboard_summary():
             "id": str(next_planned["_id"]),
             "exercise": next_planned.get("exercise"),
             "sets": next_planned.get("sets"),
-            "reps": next_planned.get("reps")
+            "reps": next_planned.get("reps"),
+            "weight": next_planned.get("weight")
         }
 
     # Calories sum today
